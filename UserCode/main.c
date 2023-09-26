@@ -1,10 +1,13 @@
-#include<STC89.h>
+#include "STC89.h"
+#include "button.h"
 
 void main()
 {
-	while(1)
-	{
-		;
-	}
-	
+    LCD_Init();
+    Button_Init();
+    while(1)
+    {
+        ;
+    }
+
 }

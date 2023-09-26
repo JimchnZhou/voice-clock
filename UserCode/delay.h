@@ -1,8 +1,12 @@
 #ifndef __DELAY_H__
 #define __DELAY_H__
 
-void	Delay_us( UINT16 n );  // 以us为单位延时
-void	Delay_ms( UINT16 n );  // 以ms为单位延时
+//寰寤舵椂鍑芥暟
+void	Delay_us(unsigned int n);
+
+//姣寤舵椂鍑芥暟
+void	Delay_ms(unsigned int n);
+
 
 #endif
 

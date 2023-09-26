@@ -13,11 +13,11 @@ void Timer0_Init(void);
 //// #define  T2_INT   1
 //// #define  T2_CAP   1
 
-//extern UINT8 FLAG; 
+//extern UINT8 FLAG;
 //extern UINT16 Cap[8];
 
-////CH554 Timer0时钟选择   
-////bTMR_CLK同时影响Timer0&1&2,使用时要注意 (除定时使用标准时钟)            
+////CH554 Timer0时钟选择
+////bTMR_CLK同时影响Timer0&1&2,使用时要注意 (除定时使用标准时钟)
 //#define mTimer0Clk12DivFsys( ) (T2MOD &= ~bT0_CLK)                          //定时器,时钟=Fsys/12 T0标准时钟
 //#define mTimer0ClkFsys( )      (T2MOD |= bTMR_CLK | bT0_CLK)                //定时器,时钟=Fsys
 //#define mTimer0Clk4DivFsys( )  (T2MOD &= ~bTMR_CLK;T2MOD |=  bT0_CLK)       //定时器,时钟=Fsys/4
@@ -43,7 +43,7 @@ void Timer0_Init(void);
 
 ////CH554 Timer2 开始(SS=1)/结束(SS=0)
 //#define mTimer2RunCTL( SS )    {TR2 = SS ? START : STOP;}
-//#define mTimer2OutCTL( )       (T2MOD |= T2OE)                               //T2输出  频率TF2/2   
+//#define mTimer2OutCTL( )       (T2MOD |= T2OE)                               //T2输出  频率TF2/2
 //#define CAP1Alter( )           (PIN_FUNC |= bT2_PIN_X;)                      //CAP1由P10 映射到P14
 //#define CAP2Alter( )           (PIN_FUNC |= bT2EX_PIN_X;)                    //CAP2由P11 映射RST
 
@@ -55,7 +55,7 @@ void Timer0_Init(void);
 //                   1：模式1，16位定时器
 //                   2：模式2，8位自动重装定时器
 //                   3：模式3，两个8位定时器  Timer0
-//                   3：模式3，Timer1停止		
+//                   3：模式3，Timer1停止
 //                   UINT8 x 定时器  0 1 2
 //* Output         : None
 //* Return         : 成功  SUCCESS
@@ -65,7 +65,7 @@ void Timer0_Init(void);
 
 ///*******************************************************************************
 //* Function Name  : mTimer_x_SetData(UINT8 x,UINT16 dat)
-//* Description    : CH554Timer 
+//* Description    : CH554Timer
 //* Input          : UINT16 dat;定时器赋值
 //                   UINT8 x 定时器  0 1 2
 //* Output         : None

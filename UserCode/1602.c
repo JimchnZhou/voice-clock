@@ -1,132 +1,113 @@
-/*-----------------------------------------------
-  √˚≥∆£∫LCD1602
-  ¬€Ã≥£∫www.doflye.net
-  ±‡–¥£∫shifang
-  »’∆⁄£∫2009.5
-  –ﬁ∏ƒ£∫Œﬁ
-  ƒ⁄»›£∫
-  “˝Ω≈∂®“Â»Áœ¬£∫1-VSS 2-VDD 3-V0 4-RS 5-R/W 6-E 7-14 DB0-DB7 15-BLA 16-BLK
-------------------------------------------------*/
+#include "STC89.h"
 #include "1602.h"
 #include "delay.h"
 
-sbit RS = P2^4;   //∂®“Â∂Àø⁄ 
-sbit RW = P2^5;
-sbit EN = P2^6;
+sbit RS = P2 ^ 4; 
+sbit RW = P2 ^ 5;
+sbit EN = P2 ^ 6;
 
-#define RS_CLR RS=0 
+#define RS_CLR RS=0
 #define RS_SET RS=1
 
-#define RW_CLR RW=0 
-#define RW_SET RW=1 
+#define RW_CLR RW=0
+#define RW_SET RW=1
 
 #define EN_CLR EN=0
 #define EN_SET EN=1
 
 #define DataPort P0
 
-/*------------------------------------------------
-              ≈–√¶∫Ø ˝
-------------------------------------------------*/
- bit LCD_Check_Busy(void) 
- { 
- DataPort= 0xFF; 
- RS_CLR; 
- RW_SET; 
- EN_CLR; 
- _nop_(); 
- EN_SET;
- return (bit)(DataPort & 0x80);
- }
-/*------------------------------------------------
-              –¥»Î√¸¡Ó∫Ø ˝
-------------------------------------------------*/
- void LCD_Write_Com(unsigned char com) 
- {  
-// while(LCD_Check_Busy()); //√¶‘Úµ»¥˝
- DelayMs(5);
- RS_CLR; 
- RW_CLR; 
- EN_SET; 
- DataPort= com; 
- _nop_(); 
- EN_CLR;
- }
-/*------------------------------------------------
-              –¥»Î ˝æ›∫Ø ˝
-------------------------------------------------*/
- void LCD_Write_Data(unsigned char Data) 
- { 
- //while(LCD_Check_Busy()); //√¶‘Úµ»¥˝
- DelayMs(5);
- RS_SET; 
- RW_CLR; 
- EN_SET; 
- DataPort= Data; 
- _nop_();
- EN_CLR;
- }
+bit LCD_Check_Busy(void)
+{
+    DataPort = 0xFF;
+    RS_CLR;
+    RW_SET;
+    EN_CLR;
+    Delay_us(1);
+    EN_SET;
+    return (bit)(DataPort & 0x80);
+}
 
 
-/*------------------------------------------------
-                «Â∆¡∫Ø ˝
-------------------------------------------------*/
- void LCD_Clear(void) 
- { 
- LCD_Write_Com(0x01); 
- DelayMs(5);
- }
-/*------------------------------------------------
-              –¥»Î◊÷∑˚¥Æ∫Ø ˝
-------------------------------------------------*/
- void LCD_Write_String(unsigned char x,unsigned char y,unsigned char *s) 
- {     
- if (y == 0) 
- 	{     
-	 LCD_Write_Com(0x80 + x);     //±Ì æµ⁄“ª––
- 	}
- else 
- 	{      
- 	LCD_Write_Com(0xC0 + x);      //±Ì æµ⁄∂˛––
- 	}        
- while (*s) 
- 	{     
- LCD_Write_Data( *s);     
- s ++;     
- 	}
- }
-/*------------------------------------------------
-              –¥»Î◊÷∑˚∫Ø ˝
-------------------------------------------------*/
-/* void LCD_Write_Char(unsigned char x,unsigned char y,unsigned char Data) 
- {     
- if (y == 0) 
- 	{     
- 	LCD_Write_Com(0x80 + x);     
- 	}    
- else 
- 	{     
- 	LCD_Write_Com(0xC0 + x);     
- 	}        
- LCD_Write_Data( Data);  
- }*/
-/*------------------------------------------------
-              ≥ı ºªØ∫Ø ˝
-------------------------------------------------*/
- void LCD_Init(void) 
+void LCD_Write_Com(unsigned char com)
+{
+// while(LCD_Check_Busy()); 
+    Delay_ms(5);
+    RS_CLR;
+    RW_CLR;
+    EN_SET;
+    DataPort = com;
+    Delay_us(1);
+    EN_CLR;
+}
+
+
+void LCD_Write_Data(unsigned char Data)
+{
+//while(LCD_Check_Busy());
+    Delay_ms(5);
+    RS_SET;
+    RW_CLR;
+    EN_SET;
+    DataPort = Data;
+    Delay_us(1);
+    EN_CLR;
+}
+
+
+void LCD_Clear(void)
+{
+    LCD_Write_Com(0x01);
+    Delay_ms(5);
+}
+
+
+void LCD_Write_String(unsigned char x, unsigned char y, unsigned char* s)
+{
+    if(y == 0)
+    {
+        LCD_Write_Com(0x80 + x);
+    }
+    else
+    {
+        LCD_Write_Com(0xC0 + x);
+    }
+    while(*s)
+    {
+        LCD_Write_Data(*s);
+        s ++;
+    }
+}
+
+
+/* void LCD_Write_Char(unsigned char x,unsigned char y,unsigned char Data)
  {
-   LCD_Write_Com(0x38);    /*œ‘ æƒ£ Ω…Ë÷√*/ 
-   DelayMs(5); 
-   LCD_Write_Com(0x38); 
-   DelayMs(5); 
-   LCD_Write_Com(0x38); 
-   DelayMs(5); 
-   LCD_Write_Com(0x38);  
-   LCD_Write_Com(0x08);    /*œ‘ æπÿ±’*/ 
-   LCD_Write_Com(0x01);    /*œ‘ æ«Â∆¡*/ 
-   LCD_Write_Com(0x06);    /*œ‘ æπ‚±Í“∆∂Ø…Ë÷√*/ 
-   DelayMs(5); 
-   LCD_Write_Com(0x0C);    /*œ‘ æø™º∞π‚±Í…Ë÷√*/
-   }
-   
+ if (y == 0)
+ 	{
+ 	LCD_Write_Com(0x80 + x);
+ 	}
+ else
+ 	{
+ 	LCD_Write_Com(0xC0 + x);
+ 	}
+ LCD_Write_Data( Data);
+ }*/
+
+//LCD1602ÂàùÂßãÂåñ
+void LCD_Init(void)
+{
+    LCD_Write_Com(0x38);
+    Delay_ms(5);
+    LCD_Write_Com(0x38);
+    Delay_ms(5);
+    LCD_Write_Com(0x38);
+    Delay_ms(5);
+    LCD_Write_Com(0x38);
+    LCD_Write_Com(0x08);
+    LCD_Write_Com(0x01);
+    LCD_Write_Com(0x06);
+    Delay_ms(5);
+    LCD_Write_Com(0x0C);
+}
+
 

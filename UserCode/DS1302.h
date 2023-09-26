@@ -5,9 +5,9 @@
 #include <reg52.h>
 #include<intrins.h>
 
-sbit SCK=P1^4;		
-sbit SDA=P1^5;		
-sbit RST=P1^6;
+sbit SCK = P1 ^ 4;
+sbit SDA = P1 ^ 5;
+sbit RST = P1 ^ 6;
 //复位脚
 #define RST_CLR	RST=0//电平置低
 #define RST_SET	RST=1//电平置高
@@ -32,7 +32,7 @@ sbit RST=P1^6;
 #define ds1302_day_add			0x8a		//星期数据地址
 #define ds1302_year_add			0x8c		//年数据地址
 #define ds1302_control_add		0x8e		//控制数据地址
-#define ds1302_charger_add		0x90 					 
+#define ds1302_charger_add		0x90
 #define ds1302_clkburst_add		0xbe
 
 extern unsigned char time_buf1[8];//空年月日时分秒周
