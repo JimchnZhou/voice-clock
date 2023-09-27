@@ -1,5 +1,5 @@
 #include "STC89.h"
-#include "led.h"
+#include "gpio.h"
 
 sbit LED1 = P3 ^ 0;
 sbit LED2 = P3 ^ 1;

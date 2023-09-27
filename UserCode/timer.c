@@ -1,29 +1,88 @@
 #include "STC89.h"
 #include "timer.h"
-#include "button.h"
+//#include "Uart_1.h"
 
+#define	DebugSendByte	Send_Data1
+
+#define	FOSC	22118400
+#define	Timer_0_List_Count	4
+
+struct 
+{
+	unsigned char Flag[Timer_0_List_Count];
+	void (*Fun_Point_List[Timer_0_List_Count])(void);
+	unsigned int Counter[Timer_0_List_Count];
+	unsigned int Timer[Timer_0_List_Count];
+}Timer0_Struct;
+
+unsigned char Timer0_Handler_Flag=0;
+
+//åˆå§‹åŒ–å®šæ—¶å™¨0
 void Timer0_Init(void)
 {
-
-//	AUXR |= 0x80;//¶¨Ê±Æ÷Ê±ÖÓ1TÄ£Ê½
-    TMOD &= 0xF1;//ÉèÖÃ¶¨Ê±Æ÷Ä£Ê½ 1111 0001
-    TL0 = 0x20;//ÉèÖÃ¶¨Ê±³õÖµ
-    TH0 = 0xD1;//ÉèÖÃ¶¨Ê±³õÖµ
-    TF0 = 0;//Çå³ıTF0±êÖ¾
-    TR0 = 1;//Æô¶¯¶¨Ê±Æ÷
-    ET0 = 1;//Ê¹ÄÜ¶¨Ê±Æ÷ÖĞ¶Ï
-
+	unsigned char i=0;
+	
+	for(i=0;i<Timer_0_List_Count;i++)
+	{
+		Timer0_Struct.Flag[i] = 0;
+		Timer0_Struct.Counter[i] = 0;
+	}
+	
+	AUXR |= 0x80;//å®šæ—¶å™¨æ—¶é’Ÿ1Tæ¨¡å¼
+	TMOD &= 0xF0;//è®¾ç½®å®šæ—¶å™¨æ¨¡å¼
+    TL0 = 0x9A;//è®¾ç½®å®šæ—¶åˆå€¼
+	TH0 = 0xA9;//è®¾ç½®å®šæ—¶åˆå€¼
+	TF0 = 0;//æ¸…é™¤TF0æ ‡å¿—
+    TR0 = 1;//å¯åŠ¨å®šæ—¶å™¨
+    ET0 = 1;//ä½¿èƒ½å®šæ—¶å™¨ä¸­æ–­
+	
 }
 
-/*******************************************************************************
-* Function Name  : mTimer0Interrupt()
-* Description    : CH554¶¨Ê±¼ÆÊıÆ÷0¶¨Ê±¼ÆÊıÆ÷ÖĞ¶Ï´¦Àíº¯Êı
-*******************************************************************************/
-void	mTimer0Interrupt(void) interrupt INT_NO_TMR0 using 1                  //timer0ÖĞ¶Ï·şÎñ³ÌĞò,Ê¹ÓÃ¼Ä´æÆ÷×é1
+//æ·»åŠ ä¸€ä¸ªå‡½æ•°åˆ°å®šæ—¶å™¨ä¸­
+unsigned char Timer_0_Add_Fun(unsigned int Time,void (*Fun)(void))
 {
-    Polling_Button_State();
-    TL0 = 0xF0;//ÉèÖÃ¶¨Ê±³õÖµ
-    TH0 = 0xD8;//ÉèÖÃ¶¨Ê±³õÖµ
+	unsigned char i=0;
+	for(i=0;i<Timer_0_List_Count;i++)
+	{
+		if(Timer0_Struct.Flag[i] == 0)
+		{
+			Timer0_Struct.Flag[i] = 1;
+			Timer0_Struct.Counter[i] = 0;
+			Timer0_Struct.Fun_Point_List[i] = Fun;
+			Timer0_Struct.Timer[i] = Time-1;
+			return 1;
+		}
+	}
+	return 0;
 }
+
+//ç³»ç»Ÿå®šæ—¶å™¨ä¸­æ–­é‡Œé¢æ‰§è¡Œçš„å‡½æ•°
+void Timer0_SYS_APP_LOOP(void)
+{
+	unsigned char i=0,j=0;
+	if(Timer0_Handler_Flag == 0)
+		return;
+	Timer0_Handler_Flag = 0;
+	for(i=0;i<Timer_0_List_Count;i++) //å¾ªç¯å®šæ—¶çš„å‡½æ•°
+	{
+		if(Timer0_Struct.Flag[i])
+		{
+			Timer0_Struct.Counter[i] ++ ;
+			if(Timer0_Struct.Counter[i] > Timer0_Struct.Timer[i])
+			{
+				Timer0_Struct.Counter[i] = 0;
+				Timer0_Struct.Fun_Point_List[i]();
+			}
+		}
+	}
+	
+	
+}
+//è¢«é“¾æ¥åˆ°äº†å®šæ—¶å™¨0.
+void Timer0_Interrupt(void) interrupt 1
+{
+	Timer0_Handler_Flag = 1;
+}
+//
 
 
