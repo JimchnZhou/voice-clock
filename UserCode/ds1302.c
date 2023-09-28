@@ -74,10 +74,8 @@ void Ds1302_Write_Byte(unsigned char addr, unsigned char d)
     }
     RST_CLR;					//停止DS1302总线
 }
-/*------------------------------------------------
-           从DS1302读出一字节数据
-------------------------------------------------*/
 
+//从DS1302读出一字节数据
 unsigned char Ds1302_Read_Byte(unsigned char addr)
 {
 
@@ -123,9 +121,7 @@ unsigned char Ds1302_Read_Byte(unsigned char addr)
     return temp;
 }
 
-/*------------------------------------------------
-           向DS1302写入时钟数据
-------------------------------------------------*/
+//向DS1302写入时钟数据
 void Ds1302_Write_Time(void)
 {
 
@@ -151,9 +147,7 @@ void Ds1302_Write_Time(void)
     Ds1302_Write_Byte(ds1302_control_add, 0x80);			//打开写保护
 }
 
-/*------------------------------------------------
-           从DS1302读出时钟数据
-------------------------------------------------*/
+//从DS1302读出时钟数据
 void Ds1302_Read_Time(void)
 {
     unsigned char i, tmp;
@@ -175,12 +169,9 @@ void Ds1302_Read_Time(void)
     }
 }
 
-/*------------------------------------------------
-                DS1302初始化
-------------------------------------------------*/
+//DS1302初始化
 void Ds1302_Init(void)
 {
-
     RST_CLR;			//RST脚置低
     SCK_CLR;			//SCK脚置低
     Ds1302_Write_Byte(ds1302_sec_add, 0x00);
