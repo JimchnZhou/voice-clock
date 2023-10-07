@@ -1,13 +1,13 @@
 #include "delay.h"
 
 //微秒延时函数
-void	Delay_us(unsigned int n)
+void Delay_us(unsigned int n)
 {
     while(n--);
 }
 
 //毫秒延时函数
-void	Delay_ms(unsigned int n)
+void Delay_ms(unsigned int n)
 {
     while(n)
     {

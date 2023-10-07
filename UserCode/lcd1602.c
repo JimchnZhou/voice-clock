@@ -2,7 +2,7 @@
 #include "lcd1602.h"
 #include "delay.h"
 
-sbit RS = P2 ^ 4; 
+sbit RS = P2 ^ 4;
 sbit RW = P2 ^ 5;
 sbit EN = P2 ^ 6;
 
@@ -15,29 +15,29 @@ sbit EN = P2 ^ 6;
 #define EN_CLR EN=0		//EN引脚拉低，EN下降沿(1→0)时执行指令
 #define EN_SET EN=1		//EN引脚拉高，EN=1时读取信息
 
-#define DataPort P0		//8位数据总线引脚
+#define DATAPORT P0		//8位数据总线引脚
 
 //LCD1602判忙
 bit LCD1602_Check_Busy(void)
 {
-    DataPort = 0xFF;
+    DATAPORT = 0xFF;
     RS_CLR;
     RW_SET;
     EN_CLR;
     Delay_us(1);
     EN_SET;
-    return (bit)(DataPort & 0x80);
+    return (bit)(DATAPORT & 0x80);
 }
 
 //向LCD写指令
 void LCD1602_Write_Com(unsigned char com)
 {
-// while(LCD_Check_Busy()); 
+// while(LCD_Check_Busy());
     Delay_ms(5);
     RS_CLR;
     RW_CLR;
     EN_SET;
-    DataPort = com;
+    DATAPORT = com;
     Delay_us(1);
     EN_CLR;
 }
@@ -50,7 +50,7 @@ void LCD1602_Write_Data(unsigned char Data)
     RS_SET;
     RW_CLR;
     EN_SET;
-    DataPort = Data;
+    DATAPORT = Data;
     Delay_us(1);
     EN_CLR;
 }
