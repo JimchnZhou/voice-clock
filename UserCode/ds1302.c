@@ -2,7 +2,7 @@
 #include "ds1302.h"
 
 //DS1302与单片机的连接
-sbit SCK = P2 ^ 0;	
+sbit SCK = P2 ^ 0;
 sbit SDA = P2 ^ 1;
 sbit RST = P2 ^ 2;
 
@@ -26,8 +26,8 @@ sbit RST = P2 ^ 2;
 #define ds1302_charger_add		0x90
 #define ds1302_clkburst_add		0xbe
 
-extern unsigned char time_buf1[8];
-extern unsigned char time_buf[8] ;
+//extern unsigned char time_buf1[8];
+//extern unsigned char time_buf[8] ;
 
 unsigned char time_buf1[8] = {20, 10, 6, 5, 12, 55, 00, 6}; //空年月日时分秒周
 unsigned char time_buf[8] ;                         //空年月日时分秒周

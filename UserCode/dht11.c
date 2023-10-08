@@ -35,7 +35,7 @@ typedef struct
 // 读取 DHT11_DATA 数据
 unsigned char DHT11_Read(void)
 {
-    if (DHT11_DATA)
+    if(DHT11_DATA)
     {
         return 1;
     }
@@ -58,12 +58,12 @@ unsigned char DHT11_Start(void)
     DHT11_DATA_SET;                       // 主机释放总线，总线由上拉电阻拉高
     Delay_us(20);                         // 主机延时20us，等待响应稳定
     DHT11_DATA_INPUT;                     // 主机设为输入，判断从机响应信号
-    while (DHT11_Read() && (retry < 120)) // 检测 DHT11 的低电平响应
+    while(DHT11_Read() && (retry < 120))  // 检测 DHT11 的低电平响应
     {
         retry++;     // 重试次数 ++
         Delay_us(1); // 一次重试延时 1us，重试次数相当于延时时长
     }
-    if (retry >= 120) // 判断是否超时
+    if(retry >= 120)  // 判断是否超时
     {
         return -1; // 超时返回 -1，DHT11 无响应
     }
@@ -71,12 +71,12 @@ unsigned char DHT11_Start(void)
     {
         retry = 0; // 未超时代表 DHT11 正确拉低电平，继续检测
     }
-    while ((!DHT11_Read() && (retry < 120))) // 检测 DHT11 的高电平响应
+    while((!DHT11_Read() && (retry < 120)))  // 检测 DHT11 的高电平响应
     {
         retry++;     // 重试次数 ++
         Delay_us(1); // 一次重试延时 1us，重试次数相当于延时时长
     }
-    if (retry >= 120) // 判断是否超时
+    if(retry >= 120)  // 判断是否超时
     {
         return -1; // 超时返回 1，DHT11 无响应
     }
@@ -93,21 +93,21 @@ static unsigned char DHT11_Read_Bit(void)
 {
     unsigned char retry = 0; // 定义变量，重试次数
 
-    while (DHT11_Read() && (retry < 120)) // 检测 DHT11 的低电平响应
+    while(DHT11_Read() && (retry < 120))  // 检测 DHT11 的低电平响应
     {
         retry++;     // 重试次数 ++
         Delay_us(1); // 一次重试延时 1us，重试次数相当于延时时长
     }
     retry = 0;
 
-    while ((!DHT11_Read() && (retry < 120))) // 检测 DHT11 的高电平响应
+    while((!DHT11_Read() && (retry < 120)))  // 检测 DHT11 的高电平响应
     {
         retry++;     // 重试次数 ++
         Delay_us(1); // 一次重试延时 1us，重试次数相当于延时时长
     }
     Delay_us(45); // 延时45us，跳过数据0的高电平时间
 
-    if (DHT11_Read()) // 45us 后，如果 DHT11_DATA 还为高说明是数据 1
+    if(DHT11_Read())  // 45us 后，如果 DHT11_DATA 还为高说明是数据 1
     {
         return 1;
     }
@@ -122,7 +122,7 @@ static unsigned char DHT11_Read_Byte(void)
 {
     unsigned char i, dat;
     dat = 0;
-    for (i = 0; i < 8; i++)
+    for(i = 0; i < 8; i++)
     {
         dat <<= 1;
         dat |= DHT11_Read_Bit();
@@ -130,7 +130,7 @@ static unsigned char DHT11_Read_Byte(void)
     return dat;
 }
 
-unsigned char DHT11_Read_Data(DHT11_Data *Data)
+unsigned char DHT11_Read_Data(DHT11_Data* Data)
 {
     unsigned char retry = 0; // 定义变量，重试次数
     Data->U8RH_data_H = DHT11_Read_Byte();
@@ -139,13 +139,13 @@ unsigned char DHT11_Read_Data(DHT11_Data *Data)
     Data->U8T_data_L = DHT11_Read_Byte();
     Data->U8checkdata = DHT11_Read_Byte();
 
-    while (DHT11_Read() && (retry < 120)) // 检测 DHT11 的低电平响应
+    while(DHT11_Read() && (retry < 120))  // 检测 DHT11 的低电平响应
     {
         retry++;     // 重试次数 ++
         Delay_us(1); // 一次重试延时 1us，重试次数相当于延时时长
     }
 
-    if (retry >= 120) // 判断是否超时
+    if(retry >= 120)  // 判断是否超时
     {
         return -1; // 超时返回 1，DHT11 无响应
     }
@@ -153,12 +153,12 @@ unsigned char DHT11_Read_Data(DHT11_Data *Data)
     {
         retry = 0; // 未超时代表 DHT11 正确拉低电平，继续检测
     }
-    while ((!DHT11_Read() && (retry < 120))) // 检测 DHT11 的高电平响应
+    while((!DHT11_Read() && (retry < 120)))  // 检测 DHT11 的高电平响应
     {
         retry++;     // 重试次数 ++
         Delay_us(1); // 一次重试延时 1us，重试次数相当于延时时长
     }
-    if (retry >= 120) // 判断是否超时
+    if(retry >= 120)  // 判断是否超时
     {
         return -1; // 超时返回 1，DHT11 无响应
     }
@@ -168,7 +168,7 @@ unsigned char DHT11_Read_Data(DHT11_Data *Data)
     }
 
     DHT11_DATA_SET;
-    if (Data->U8checkdata == Data->U8RH_data_H + Data->U8RH_data_L + Data->U8T_data_H + Data->U8T_data_L)
+    if(Data->U8checkdata == Data->U8RH_data_H + Data->U8RH_data_L + Data->U8T_data_H + Data->U8T_data_L)
     {
         return 0;
     }

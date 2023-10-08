@@ -2,9 +2,9 @@
 #include "lcd1602.h"
 #include "delay.h"
 
-sbit RS = P2 ^ 4;
-sbit RW = P2 ^ 5;
-sbit EN = P2 ^ 6;
+sbit RS = P2 ^ 7;
+sbit RW = P2 ^ 6;
+sbit EN = P2 ^ 5;
 
 #define RS_CLR RS=0		//RS引脚拉低，输入指令
 #define RS_SET RS=1		//RS引脚拉高，输出数据

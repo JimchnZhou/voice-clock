@@ -14,10 +14,10 @@ void LED2_ON(void);
 void LED2_OFF(void);
 
 //打开蜂鸣器，响
-Void Beep_ON(void);
+void Beep_ON(void);
 
 //关闭蜂鸣器，不响
-void Beep_OFF(void);	
+void Beep_OFF(void);
 
 //蜂鸣器响 tms
 void Beep_Once(unsigned int ms);
