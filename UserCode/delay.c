@@ -11,15 +11,17 @@ void Delay_us(unsigned int n)
 void Delay_ms(unsigned int n)
 {
     unsigned char data i, j;
-
-    _nop_();
-    i = 2;
-    j = 199;
-    do
+    while(n--)
     {
-        while(--j);
+        _nop_();
+        i = 2;
+        j = 199;
+        do
+        {
+            while(--j);
+        }
+        while(--i);
     }
-    while(--i);
 }
 
 

@@ -19,8 +19,10 @@ void Beep_ON(void);
 //关闭蜂鸣器，不响
 void Beep_OFF(void);
 
-//蜂鸣器响 tms
+//蜂鸣器响 ms
 void Beep_Once(unsigned int ms);
 
+//蜂鸣器响 300ms
+void Beep_300ms(void);
 
 #endif

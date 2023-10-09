@@ -16,4 +16,6 @@ void LCD1602_Write_Char(unsigned char x, unsigned char y, unsigned char Data) ;
 
 void LCD1602_Init(void) ;
 
+void LCD1602_Loop(void);
+
 #endif

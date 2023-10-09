@@ -1,17 +1,18 @@
 #include "STC89.h"
 #include "Button.h"
+#include "gpio.h"
 
 #define	Debug_SendData	Send_Data1
 
-#define	Button_IO_0	P3^2		//按键1接P3.2口
-#define	Button_IO_1	P3^3		//按键2接P3.3口
-#define	Button_IO_2	P3^4		//按键3接P3.4口
+sbit	Button_IO_0 =	P3 ^ 2;		//按键1接P3.2口
+sbit	Button_IO_1	= P3 ^ 3;		//按键2接P3.3口
+sbit	Button_IO_2	= P3 ^ 4;	//按键3接P3.4口
 
 #define Button_Count 3			//按键的数量
 
-#define	Button_Click_Time 10				//单击时间
-#define	Button_Long_Press_Time 100	//长按时间
-#define Button_Timeout_Time 300			//超时时间
+#define	Button_Click_Time 5				//单击时间
+#define	Button_Long_Press_Time 50	//长按时间
+#define Button_Timeout_Time 150			//超时时间
 
 static unsigned int Button_Hold_Timer[Button_Count];		//按键按下的时长
 static void (*Click_Fun_List[Button_Count])(void);			//单击函数列表
@@ -28,7 +29,6 @@ void Button_Init(void)
         Click_Fun_List[i] = 0;
         Long_Press_Fun_List[i] = 0;
         Timeout_Fun_List[i] = 0;
-
     }
 }
 
@@ -92,11 +92,14 @@ static void Button_RunFun(unsigned char CH, unsigned char Type)
 void Button_Loop(void)
 {
     unsigned char i;
+
     for(i = 0; i < Button_Count; i++)		//循环检测各个按键
     {
         if(Get_Button_Press_Status(i) == 0)		//如果按键被按下
         {
+
             Button_Hold_Timer[i] ++ ;		//按键按下的时长++
+
         }
         else		//如果按键没有被按下
         {

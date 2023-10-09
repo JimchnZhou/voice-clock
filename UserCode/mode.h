@@ -1,8 +1,6 @@
 #ifndef __MODE_H__
 #define __MODE_H__
 
-// #include<STC15W.h>
-
 void Mode_Init(void);
 void Mode_Loop(void);
 void Mode_ChangeMode(void);

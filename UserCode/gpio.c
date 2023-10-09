@@ -33,13 +33,13 @@ void LED2_OFF(void)
 //打开蜂鸣器，响
 void Beep_ON(void)
 {
-    Beep = 1;
+    Beep = 0;
 }
 
 //关闭蜂鸣器，不响
 void Beep_OFF(void)
 {
-    Beep = 0;
+    Beep = 1;
 }
 
 //蜂鸣器响ms
@@ -47,5 +47,13 @@ void Beep_Once(unsigned int ms)
 {
     Beep_ON();
     Delay_ms(ms);
+    Beep_OFF();
+}
+
+//蜂鸣器响ms
+void Beep_300ms(void)
+{
+    Beep_ON();
+    Delay_ms(300);
     Beep_OFF();
 }

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "STC89.h"
 #include "lcd1602.h"
 #include "delay.h"
@@ -16,6 +17,9 @@ sbit EN = P2 ^ 5;
 #define EN_SET EN=1		//EN引脚拉高，EN=1时读取信息
 
 #define DATAPORT P0		//8位数据总线引脚
+
+unsigned char temp[16];//定义显示区域临时存储数组
+extern unsigned char time_buf1[8];//空年月日时分秒周
 
 //LCD1602判忙
 bit LCD1602_Check_Busy(void)
@@ -62,7 +66,7 @@ void LCD1602_Clear(void)
     Delay_ms(5);
 }
 
-//向LCD写
+//向LCD写入字符串函数
 void LCD1602_Write_String(unsigned char x, unsigned char y, unsigned char* s)
 {
     if(y == 0)
@@ -111,4 +115,11 @@ void LCD1602_Init(void)
     LCD1602_Write_Com(0x0C);
 }
 
+void LCD1602_Loop(void)
+{
+    sprintf(temp, "%04d-%02d-%02d", (int)time_buf1[1], (int)time_buf1[2], (int)time_buf1[3], (int)time_buf1[7]); //年月日周
+    LCD1602_Write_String(0, 0, temp); //显示第一行
+    sprintf(temp, "%02d:%02d:%02d", (int)time_buf1[4], (int)time_buf1[5], (int)time_buf1[6]); //时分秒
+    LCD1602_Write_String(0, 1, temp); //显示第二行
+}
 
