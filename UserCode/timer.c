@@ -1,6 +1,6 @@
-#include "Timer.h"
+#include "timer.h"
 #include "sys_loop.h"
-#include "Button.h"
+#include "button.h"
 
 //初始化定时器0，10ms
 void Timer0_Init(void)

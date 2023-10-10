@@ -7,21 +7,21 @@ sbit RS = P2 ^ 7;
 sbit RW = P2 ^ 6;
 sbit EN = P2 ^ 5;
 
-#define RS_CLR RS=0		//RS引脚拉低，输入指令
-#define RS_SET RS=1		//RS引脚拉高，输出数据
+#define RS_CLR RS = 0 // RS引脚拉低，输入指令
+#define RS_SET RS = 1 // RS引脚拉高，输出数据
 
-#define RW_CLR RW=0		//RW引脚拉低，向LCD写指令或数据
-#define RW_SET RW=1		//RW引脚拉高，从LCD读取信息
+#define RW_CLR RW = 0 // RW引脚拉低，向LCD写指令或数据
+#define RW_SET RW = 1 // RW引脚拉高，从LCD读取信息
 
-#define EN_CLR EN=0		//EN引脚拉低，EN下降沿(1→0)时执行指令
-#define EN_SET EN=1		//EN引脚拉高，EN=1时读取信息
+#define EN_CLR EN = 0 // EN引脚拉低，EN下降沿(1→0)时执行指令
+#define EN_SET EN = 1 // EN引脚拉高，EN=1时读取信息
 
-#define DATAPORT P0		//8位数据总线引脚
+#define DATAPORT P0 // 8位数据总线引脚
 
-unsigned char temp[16];//定义显示区域临时存储数组
-extern unsigned char time_buf1[8];//空年月日时分秒周
+unsigned char temp[16];            // 定义显示区域临时存储数组
+extern unsigned char time_buf1[8]; // 空年月日时分秒周
 
-//LCD1602判忙
+// LCD1602判忙
 bit LCD1602_Check_Busy(void)
 {
     DATAPORT = 0xFF;
@@ -33,10 +33,10 @@ bit LCD1602_Check_Busy(void)
     return (bit)(DATAPORT & 0x80);
 }
 
-//向LCD写指令
+// 向LCD写指令
 void LCD1602_Write_Com(unsigned char com)
 {
-// while(LCD_Check_Busy());
+    // while(LCD_Check_Busy());
     Delay_ms(5);
     RS_CLR;
     RW_CLR;
@@ -46,10 +46,10 @@ void LCD1602_Write_Com(unsigned char com)
     EN_CLR;
 }
 
-//向LCD写数据
+// 向LCD写数据
 void LCD1602_Write_Data(unsigned char Data)
 {
-//while(LCD_Check_Busy());
+    // while(LCD_Check_Busy());
     Delay_ms(5);
     RS_SET;
     RW_CLR;
@@ -59,17 +59,17 @@ void LCD1602_Write_Data(unsigned char Data)
     EN_CLR;
 }
 
-//LCD1602清屏
+// LCD1602清屏
 void LCD1602_Clear(void)
 {
     LCD1602_Write_Com(0x01);
     Delay_ms(5);
 }
 
-//向LCD写入字符串函数
-void LCD1602_Write_String(unsigned char x, unsigned char y, unsigned char* s)
+// 向LCD写入字符串函数
+void LCD1602_Write_String(unsigned char x, unsigned char y, unsigned char *s)
 {
-    if(y == 0)
+    if (y == 0)
     {
         LCD1602_Write_Com(0x80 + x);
     }
@@ -77,29 +77,29 @@ void LCD1602_Write_String(unsigned char x, unsigned char y, unsigned char* s)
     {
         LCD1602_Write_Com(0xC0 + x);
     }
-    while(*s)
+    while (*s)
     {
         LCD1602_Write_Data(*s);
-        s ++;
+        s++;
     }
 }
 
-//LCD1602指定位置写数据
+// LCD1602指定位置写数据
 /* void LCD1602_Write_Char(unsigned char x,unsigned char y,unsigned char Data)
  {
  if (y == 0)
- 	{
- 	LCD1602_Write_Com(0x80 + x);
- 	}
+    {
+    LCD1602_Write_Com(0x80 + x);
+    }
  else
- 	{
- 	LCD1602_Write_Com(0xC0 + x);
- 	}
+    {
+    LCD1602_Write_Com(0xC0 + x);
+    }
  LCD_Write_Data( Data);
  }*/
 
-//LCD1602初始化
-void LCD1602_Init(void)
+// LCD1602初始化
+void lcd1602Init(void)
 {
     LCD1602_Write_Com(0x38);
     Delay_ms(5);
@@ -115,11 +115,18 @@ void LCD1602_Init(void)
     LCD1602_Write_Com(0x0C);
 }
 
-void LCD1602_Loop(void)
+void lcd1602Display(void)
 {
-    sprintf(temp, "%04d-%02d-%02d", (int)time_buf1[1], (int)time_buf1[2], (int)time_buf1[3], (int)time_buf1[7]); //年月日周
-    LCD1602_Write_String(0, 0, temp); //显示第一行
-    sprintf(temp, "%02d:%02d:%02d", (int)time_buf1[4], (int)time_buf1[5], (int)time_buf1[6]); //时分秒
-    LCD1602_Write_String(0, 1, temp); //显示第二行
-}
+    switch (getRunningMode())
+    {
+    case 0:                                                                                                          // 正常显示
+        sprintf(temp, "%04d-%02d-%02d", (int)time_buf1[1], (int)time_buf1[2], (int)time_buf1[3], (int)time_buf1[7]); // 年月日周
+        LCD1602_Write_String(0, 0, temp);                                                                            // 显示第一行
+        sprintf(temp, "%02d:%02d:%02d", (int)time_buf1[4], (int)time_buf1[5], (int)time_buf1[6]);                    // 时分秒
+        LCD1602_Write_String(0, 1, temp);                                                                            // 显示第二行
+        break;
 
+    default:
+        break;
+    }
+}

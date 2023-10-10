@@ -1,12 +1,12 @@
 //Timer0 22.1184MHZ
-#ifndef __TIMER0_H__
-#define __TIMER0_H__
+#ifndef __TIMER_H__
+#define __TIMER_H__
 #include "STC89.h"
 
-//初始化定时器0
-void Timer0_Init(void);
 
-//定时器0中断函数
-void Timer0_Interrupt(void);
+void timer0Init(void);
+
+
+void timer0Interrupt(void);
 
 #endif

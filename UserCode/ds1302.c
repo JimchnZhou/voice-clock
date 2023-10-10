@@ -28,6 +28,19 @@ sbit RST = P2 ^ 2;
 
 //extern unsigned char time_buf1[8];
 //extern unsigned char time_buf[8] ;
+//定义一个时钟寄存器的结构体
+// struct RTC
+// {
+//     unsigned char	Seconds;//秒
+//     unsigned char	Minutes;//分钟
+//     unsigned char	Hour;//小时
+//     unsigned char	Week;//星期
+//     unsigned char	Date;//日
+//     unsigned char	Month;//月
+//     unsigned char	Year;//年
+//     unsigned char NC;//预留一个空间。
+// };
+// static struct RTC RTC_Timer;		   // 实时读取的RTC数值
 
 unsigned char time_buf1[8] = {20, 10, 6, 5, 12, 55, 00, 6}; //空年月日时分秒周
 unsigned char time_buf[8] ;                         //空年月日时分秒周
@@ -170,7 +183,7 @@ void Ds1302_Read_Time(void)
 }
 
 //DS1302初始化
-void Ds1302_Init(void)
+void ds1302Init(void)
 {
     RST_CLR;			//RST脚置低
     SCK_CLR;			//SCK脚置低
