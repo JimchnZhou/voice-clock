@@ -4,10 +4,11 @@
 #include "dht11.h"
 #include "lcd1602.h"
 #include "button.h"
+#include "wt588.h"
 #include "gpio.h"
 #include "delay.h"
 
-#include "timer0.h"
+#include "timer.h"
 #include "mode.h"
 #include "sys_loop.h"
 
@@ -45,6 +46,9 @@ void main()
     SYS_New_LoopFun(25, Ds1302_Read_Time); //添加读取时间到系统调度，每25*10ms读取一次时间
     SYS_New_LoopFun(25, LCD1602_Loop); //添加显示到系统调度，每25*10ms刷新一次显示
     SYS_New_LoopFun(2, Button_Loop); //添加按键到系统调度，每2*10ms检测一次按键
+
+List_2A_Play_WT588F();
+//Two_Wire_Send_Byte(0x01);
 
     EA = 1;
     SYS_LOOP_While_APP();//循环执行系统调度器
