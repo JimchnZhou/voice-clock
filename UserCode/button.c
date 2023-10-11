@@ -1,6 +1,7 @@
-#include "STC89.h"
+#include "stc89.h"
 #include "button.h"
 #include "mode.h"
+#include "ds1302.h"
 #include "gpio.h"
 
 sbit Button_IO_0 = P3 ^ 2; // 按键1接P3.2口
@@ -124,50 +125,123 @@ void Button_Loop(void)
     }
 }
 
-// 按钮1单击
+// 按钮 0 单击
+void button0ClickAction()
+{
+    switch (getRunningMode())
+    {
+    case 0: // 语音播报时间
+
+        break;
+    case 1: // 保存时，进入模式 2
+        setHourToDs1302();
+        setRunningMode(2);
+        break;
+    case 2: // 保存分，进入模式 3
+        setMinuteToDs1302();
+        setRunningMode(3);
+        break;
+    case 3: // 保存秒，进入模式 1
+        setSecondToDs1302();
+        setRunningMode(1);
+        break;
+    default:
+        break;
+    }
+}
+
+// 按钮 0 长按
+void button0LongPressAction()
+{
+    switch (getRunningMode())
+    {
+    case 0: // 进入模式 1
+        setRunningMode(1);
+        break;
+    case 1: // 保存时，进入模式 0
+setHourToDs1302();
+        setRunningMode(0);
+        break;
+    case 2: // 保存分，进入模式 0
+setMinuteToDs1302();
+        setRunningMode(0);
+        break;
+    case 3: // 保存秒，进入模式 0
+setSecondToDs1302();
+        setRunningMode(0);
+        break;
+    default:
+        break;
+    }
+}
+
+// 按钮 1 单击
 void button1ClickAction()
 {
     switch (getRunningMode())
     {
-    case 1: // 调时加
-        /* code */
+    case 0: // 语音播报温度
+
         break;
-    case 2: // 调分加
-        /* code */
+    case 1: // 调时，加
+
         break;
-    case 3: // 调秒加
-        /* code */
+    case 2: // 调分，加
+
+        break;
+    case 3: // 调秒，归零
+
         break;
     default:
         break;
     }
 }
 
-// 按钮1长按
+// 按钮 1 长按
 void button1LongPressAction()
 {
+    switch (getRunningMode())
+    {
+    case 0:
+        break;
+    case 1: // 不保存，进入模式2
+        setRunningMode(2);
+        break;
+    case 2: // 不保存，进入模式3
+        setRunningMode(3);
+        break;
+    case 3: // 不保存，进入模式1
+        setRunningMode(1);
+        break;
+    default:
+        break;
+    }
 }
 
-// 按钮2单击
+// 按钮 2 单击
 void button2ClickAction()
 {
     switch (getRunningMode())
     {
-    case 1: // 调时减
-        /* code */
+    case 0: // 语音播报湿度
+
         break;
-    case 2: // 调时加
-        /* code */
+    case 1: // 调时，减
+
         break;
-    case 3: // 调秒加
-        /* code */
+    case 2: // 调分，减
+
+        break;
+    case 3: // 调秒，归零
+
         break;
     default:
         break;
     }
 }
 
-// 按钮2长按
+// 按钮 2 长按：退出到默认模式
 void button2LongPressAction()
 {
+    setRunningMode(0);
 }

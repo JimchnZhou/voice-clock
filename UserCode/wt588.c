@@ -1,14 +1,16 @@
-#include "STC89.h"
-#include "WT588.h"
+#include "stc89.h"
+#include "wt588.h"
 #include "delay.h"
 #include "mode.h"
+#include "ds1302.h"
+#include "dht11.h"
 
 sbit Busy = P3 ^ 5;
 sbit One_Wire_SDA = P3 ^ 6;
 sbit Two_Wire_SCL = P3 ^ 6;
 sbit Two_Wire_SDA = P3 ^ 7;
 
-// WT588F一线单字节控制程序
+// WT588F 一线 单字节 控制程序
 void One_Wire_Send_Byte(unsigned char Byte_Value)
 {
     unsigned char S_DATA, i;
@@ -36,7 +38,7 @@ void One_Wire_Send_Byte(unsigned char Byte_Value)
     One_Wire_SDA = 1; // 发送完毕，拉高数据线
 }
 
-// WT588F一线双字节控制程序
+// WT588F 一线 双字节 控制程序
 void One_Wire_Send_Double(unsigned int Double_Value)
 {
     unsigned char i;
@@ -84,7 +86,7 @@ void One_Wire_Send_Double(unsigned int Double_Value)
     One_Wire_SDA = 1;
 }
 
-// WT588F一线单字节连码示例(F3 + 01 + F3 + 02)
+// WT588F 一线 单字节 连码示例(F3 + 01 + F3 + 02)
 void List_1A_Play_WT588F(void)
 {
     One_Wire_Send_Byte(0xF3);
@@ -97,7 +99,7 @@ void List_1A_Play_WT588F(void)
     Delay_ms(5); // 延时 5ms
 }
 
-// WT588F一线双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
+// WT588F 一线 双字节 连码示例(FFF3 + 0001 + FFF3 + 0002)
 void List_1A_Play_WT588F_Couple(void)
 {
     One_Wire_Send_Double(0xFFF3);
@@ -110,34 +112,34 @@ void List_1A_Play_WT588F_Couple(void)
     Delay_ms(10); // 延时 10ms
 }
 
-// WT588F二线单字节控制程序
+// WT588F 二线 单字节 控制程序
 void Two_Wire_Send_Byte(unsigned char Byte_Value)
 {
     unsigned char S_DATA, i;
-	unsigned char B_DATA;
-    Two_Wire_SCL = 1;	//拉高 CLK
-    Two_Wire_SDA = 1;	//拉高 DATA
+    unsigned char B_DATA;
+    Two_Wire_SCL = 1; // 拉高 CLK
+    Two_Wire_SDA = 1; // 拉高 DATA
     S_DATA = Byte_Value;
 
-    Two_Wire_SCL = 0;	//拉低 CLK
-    Delay_ms(5);		//延时 5ms
-B_DATA = S_DATA & 0X01;
+    Two_Wire_SCL = 0; // 拉低 CLK
+    Delay_ms(5);      // 延时 5ms
+    B_DATA = S_DATA & 0X01;
 
-    for(i = 0; i < 8; i++)
+    for (i = 0; i < 8; i++)
     {
-        Two_Wire_SCL = 0;				//拉低CLK，为发送数据做准备
-        Two_Wire_SDA = B_DATA; //传输低位数据
-        Delay_us(300);					//延时300us
-        Two_Wire_SCL = 1;				//拉高CLK,上升沿接收数据
-        Delay_us(300);					//延时350us
-        S_DATA = S_DATA >> 1;			//数据右移
-			B_DATA = S_DATA & 0X01;
+        Two_Wire_SCL = 0;      // 拉低CLK，为发送数据做准备
+        Two_Wire_SDA = B_DATA; // 传输低位数据
+        Delay_us(300);         // 延时300us
+        Two_Wire_SCL = 1;      // 拉高CLK,上升沿接收数据
+        Delay_us(300);         // 延时350us
+        S_DATA = S_DATA >> 1;  // 数据右移
+        B_DATA = S_DATA & 0X01;
     }
     Two_Wire_SDA = 1;
     Two_Wire_SCL = 1;
 }
 
-// WT588F二线双字节控制程序
+// WT588F 二线 双字节 控制程序
 void Two_Wire_Send_Double(unsigned int Double_Value)
 {
     unsigned char i;
@@ -173,131 +175,131 @@ void Two_Wire_Send_Double(unsigned int Double_Value)
     Two_Wire_SDA = 1;
 }
 
-// WT588F二线单字节连码示例(F3 + 01 + F3 + 02)
+// WT588F 二线 单字节 连码示例(F3 + 01 + F3 + 02)
 void List_2A_Play_WT588F(void)
 {
-	//现在是
+    // 现在是
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(59);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-	//北京时间
+    // 北京时间
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(60);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-	//二
+    // 二
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-	//十
+    // 十
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-//二
+    // 二
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-		//点
+    // 点
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(65);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-//五
+    // 五
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(5);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-//十
+    // 十
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-//一
-		    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    // 一
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(1);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-//分
+    // 分
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(66);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-		//温度
+    // 温度
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(54);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//3
+    // 3
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(3);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//10
+    // 10
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//2
+    // 2
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//湿度
+    // 湿度
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(55);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//3
+    // 3
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//10
+    // 10
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-				//2
+    // 2
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-						//点
+    // 点
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(65);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 
-						//8
+    // 8
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
+    Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(8);
-    Delay_ms(5); //延时 5ms
+    Delay_ms(5); // 延时 5ms
 }
 
-// WT588F二线双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
+// WT588F 二线 双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
 void List_2A_Play_WT588F_Couple(void)
 {
     Two_Wire_Send_Double(0xFFF3);
@@ -307,9 +309,28 @@ void List_2A_Play_WT588F_Couple(void)
     Two_Wire_Send_Double(0xFFF3);
     Delay_ms(5); // 延时 5ms
     Two_Wire_Send_Double(0x0002);
-    Delay_ms(10); //延时 10ms
+    Delay_ms(10); // 延时 10ms
 }
 
+// 播报时间
+void speakTime()
+{
+
+
+}
+
+//播报温度
+void speakTemperature()
+{
+
+}
+
+//播报湿度
+void speakHumidity()
+{
+
+
+}
 /*
 //欢迎使用智能语音电子时钟
     Two_Wire_Send_Byte(0xF3);
@@ -340,25 +361,25 @@ void List_2A_Play_WT588F_Couple(void)
 
 /*
 //报时
-	//现在是
+    //现在是
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(59);
     Delay_ms(5); //延时 5ms
 
-	//北京时间
+    //北京时间
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(60);
     Delay_ms(5); //延时 5ms
 
-	//二
+    //二
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(2);
     Delay_ms(5); //延时 5ms
 
-	//十
+    //十
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(10);
@@ -370,7 +391,7 @@ void List_2A_Play_WT588F_Couple(void)
     Two_Wire_Send_Byte(2);
     Delay_ms(5); //延时 5ms
 
-		//点
+        //点
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(65);
@@ -389,7 +410,7 @@ void List_2A_Play_WT588F_Couple(void)
     Delay_ms(5); //延时 5ms
 
 //一
-		    Two_Wire_Send_Byte(0xF3);
+            Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(1);
     Delay_ms(5); //延时 5ms
@@ -400,31 +421,31 @@ void List_2A_Play_WT588F_Couple(void)
     Two_Wire_Send_Byte(66);
     Delay_ms(5); //延时 5ms
 
-				//温度
+                //温度
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(54);
     Delay_ms(5); //延时 5ms
 
-				//3
+                //3
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(3);
     Delay_ms(5); //延时 5ms
 
-				//10
+                //10
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(10);
     Delay_ms(5); //延时 5ms
 
-				//2
+                //2
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(2);
     Delay_ms(5); //延时 5ms
 
-				//湿度
+                //湿度
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(55);

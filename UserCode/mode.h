@@ -1,10 +1,16 @@
 #ifndef __MODE_H__
 #define __MODE_H__
 
-// 改变运行模式
-void changeMode(void)
+//运行模式初始化
+void runningModeInit(void);
 
-void Mode_Init(void);
+// 改变运行模式
+void changeRunningMode(void);
+
+// 设置运行模式
+unsigned char setRunningMode(unsigned char modeValue);
+
+
 void Mode_Loop(void);
 void Mode_ChangeMode(void);
 void Mode_Button_Up(void);

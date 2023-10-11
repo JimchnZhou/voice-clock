@@ -1,63 +1,64 @@
-#include "STC89.h"
+#include "stc89.h"
 #include "ds1302.h"
 
-//DS1302与单片机的连接
+// DS1302???????????
 sbit SCK = P2 ^ 0;
 sbit SDA = P2 ^ 1;
 sbit RST = P2 ^ 2;
 
-#define RST_CLR	RST=0
-#define RST_SET	RST=1
+#define RST_CLR RST = 0
+#define RST_SET RST = 1
 
-#define SDA_CLR	SDA=0
-#define SDA_SET	SDA=1
+#define SDA_CLR SDA = 0
+#define SDA_SET SDA = 1
 
-#define SCK_CLR	SCK=0
-#define SCK_SET	SCK=1
+#define SCK_CLR SCK = 0
+#define SCK_SET SCK = 1
 
-#define ds1302_sec_add			0x80
-#define ds1302_min_add			0x82
-#define ds1302_hr_add			0x84
-#define ds1302_date_add			0x86
-#define ds1302_month_add		0x88
-#define ds1302_day_add			0x8a
-#define ds1302_year_add			0x8c
-#define ds1302_control_add		0x8e
-#define ds1302_charger_add		0x90
-#define ds1302_clkburst_add		0xbe
+#define ds1302_sec_add 0x80
+#define ds1302_min_add 0x82
+#define ds1302_hr_add 0x84
+#define ds1302_date_add 0x86
+#define ds1302_month_add 0x88
+#define ds1302_day_add 0x8a
+#define ds1302_year_add 0x8c
+#define ds1302_control_add 0x8e
+#define ds1302_charger_add 0x90
+#define ds1302_clkburst_add 0xbe
 
-//extern unsigned char time_buf1[8];
-//extern unsigned char time_buf[8] ;
-//定义一个时钟寄存器的结构体
-// struct RTC
-// {
-//     unsigned char	Seconds;//秒
-//     unsigned char	Minutes;//分钟
-//     unsigned char	Hour;//小时
-//     unsigned char	Week;//星期
-//     unsigned char	Date;//日
-//     unsigned char	Month;//月
-//     unsigned char	Year;//年
-//     unsigned char NC;//预留一个空间。
-// };
-// static struct RTC RTC_Timer;		   // 实时读取的RTC数值
+// extern unsigned char time_buf1[8];
+// extern unsigned char time_buf[8] ;
+// ???????????????????
+//  struct RTC
+//  {
+//      unsigned char	Seconds;//??
+//      unsigned char	Minutes;//????
+//      unsigned char	Hour;//搂鲁?
+//      unsigned char	Week;//????
+//      unsigned char	Date;//??
+//      unsigned char	Month;//??
+//      unsigned char	Year;//??
+//      unsigned char NC;//?????????
+//  };
+//  static struct RTC RTC_Timer;		   // ???????RTC???
 
-unsigned char time_buf1[8] = {20, 10, 6, 5, 12, 55, 00, 6}; //空年月日时分秒周
-unsigned char time_buf[8] ;                         //空年月日时分秒周
+unsigned char currentTimeData[7] = {0};                   // ???????? ds1302 ???????????????????
+unsigned char newTimeData[7] = {23, 10, 11, 12, 0, 0, 1}; // ???????????
 
+unsigned char time_buf1[8] = {20, 10, 6, 5, 12, 55, 00, 6}; // ???????????????
+unsigned char time_buf[8];                                  // ???????????????
 
-//向DS1302写入一字节数据
-void Ds1302_Write_Byte(unsigned char addr, unsigned char d)
+// ?DS1302???????
+void write1ByteToDs1302(unsigned char addr, unsigned char d)
 {
-
     unsigned char i;
     RST_SET;
 
-    //写入目标地址：addr
-    addr = addr & 0xFE;     //最低位置零
-    for(i = 0; i < 8; i ++)
+    // 搂脮?????????addr
+    addr = addr & 0xFE; // ???娄脣????
+    for (i = 0; i < 8; i++)
     {
-        if(addr & 0x01)
+        if (addr & 0x01)
         {
             SDA_SET;
         }
@@ -70,10 +71,10 @@ void Ds1302_Write_Byte(unsigned char addr, unsigned char d)
         addr = addr >> 1;
     }
 
-    //写入数据：d
-    for(i = 0; i < 8; i ++)
+    // 搂脮???????d
+    for (i = 0; i < 8; i++)
     {
-        if(d & 0x01)
+        if (d & 0x01)
         {
             SDA_SET;
         }
@@ -85,23 +86,23 @@ void Ds1302_Write_Byte(unsigned char addr, unsigned char d)
         SCK_CLR;
         d = d >> 1;
     }
-    RST_CLR;					//停止DS1302总线
+    RST_CLR; // ??DS1302????
 }
 
-//从DS1302读出一字节数据
-unsigned char Ds1302_Read_Byte(unsigned char addr)
+// ??DS1302????????????
+unsigned char read1ByteFromDs1302(unsigned char addr)
 {
 
     unsigned char i;
     unsigned char temp;
     RST_SET;
 
-    //写入目标地址：addr
-    addr = addr | 0x01;//最低位置高
-    for(i = 0; i < 8; i ++)
+    // 搂脮?????????addr
+    addr = addr | 0x01; // ???娄脣???
+    for (i = 0; i < 8; i++)
     {
 
-        if(addr & 0x01)
+        if (addr & 0x01)
         {
             SDA_SET;
         }
@@ -114,11 +115,11 @@ unsigned char Ds1302_Read_Byte(unsigned char addr)
         addr = addr >> 1;
     }
 
-    //输出数据：temp
-    for(i = 0; i < 8; i ++)
+    // ????????temp
+    for (i = 0; i < 8; i++)
     {
         temp = temp >> 1;
-        if(SDA)
+        if (SDA)
         {
             temp |= 0x80;
         }
@@ -130,62 +131,107 @@ unsigned char Ds1302_Read_Byte(unsigned char addr)
         SCK_CLR;
     }
 
-    RST_CLR;	//停止DS1302总线
+    RST_CLR; // ??DS1302????
     return temp;
 }
 
-//向DS1302写入时钟数据
-void Ds1302_Write_Time(void)
+// ? ds1302 ?? ??
+unsigned char setHourToDs1302(unsigned char hourValue)
+{
+    unsigned char tmp, time_buf;
+    // BCD????
+    tmp = hourValue / 10;      // ??娄脣
+    time_buf = hourValue % 10; // ???娄脣
+    time_buf = time_buf + tmp * 16;
+    write1ByteToDs1302(ds1302_control_add, 0x00); // ???搂脮????
+    write1ByteToDs1302(ds1302_sec_add, 0x80);     // ???
+    write1ByteToDs1302(ds1302_hr_add, time_buf);  // ?
+    write1ByteToDs1302(ds1302_control_add, 0x80); // ??搂脮????
+}
+
+// ? ds1302 ?? ??
+unsigned char setMinuteToDs1302(unsigned char minuteValue)
+{
+    unsigned char tmp, time_buf;
+    // BCD????
+    tmp = minuteValue / 10;      // ??娄脣
+    time_buf = minuteValue % 10; // ???娄脣
+    time_buf = time_buf + tmp * 16;
+    write1ByteToDs1302(ds1302_control_add, 0x00); // ???搂脮????
+    write1ByteToDs1302(ds1302_sec_add, 0x80);     // ???
+    write1ByteToDs1302(ds1302_min_add, time_buf); // ??
+    write1ByteToDs1302(ds1302_control_add, 0x80); // ??搂脮????
+}
+
+// ? ds1302 ?? ??
+unsigned char setSecondToDs1302(unsigned char secondValue)
+{
+    unsigned char tmp, time_buf;
+    // BCD??
+    tmp = secondValue / 10;      // ??娄脣
+    time_buf = secondValue % 10; // ???娄脣
+    time_buf = time_buf + tmp * 16;
+    write1ByteToDs1302(ds1302_control_add, 0x00); // ???搂脮????
+    write1ByteToDs1302(ds1302_sec_add, 0x80);     // ???
+    write1ByteToDs1302(ds1302_sec_add, time_buf); // ??
+    write1ByteToDs1302(ds1302_control_add, 0x80); // ??搂脮????
+}
+
+// ?DS1302??????
+void writeTimeToDs1302(void)
 {
 
     unsigned char i, tmp;
-    for(i = 0; i < 8; i++)
+    for (i = 0; i < 8; i++)
     {
-        //BCD处理
+        // BCD????
         tmp = time_buf1[i] / 10;
         time_buf[i] = time_buf1[i] % 10;
         time_buf[i] = time_buf[i] + tmp * 16;
     }
-    Ds1302_Write_Byte(ds1302_control_add, 0x00);			//关闭写保护
-    Ds1302_Write_Byte(ds1302_sec_add, 0x80);				//暂停
-    //Ds1302_Write_Byte(ds1302_charger_add,0xa9);			//涓流充电
-    Ds1302_Write_Byte(ds1302_year_add, time_buf[1]);		//年
-    Ds1302_Write_Byte(ds1302_month_add, time_buf[2]);	//月
-    Ds1302_Write_Byte(ds1302_date_add, time_buf[3]);		//日
-    Ds1302_Write_Byte(ds1302_day_add, time_buf[7]);		//周
-    Ds1302_Write_Byte(ds1302_hr_add, time_buf[4]);		//时
-    Ds1302_Write_Byte(ds1302_min_add, time_buf[5]);		//分
-    Ds1302_Write_Byte(ds1302_sec_add, time_buf[6]);		//秒
-    Ds1302_Write_Byte(ds1302_day_add, time_buf[7]);		//周
-    Ds1302_Write_Byte(ds1302_control_add, 0x80);			//打开写保护
+    write1ByteToDs1302(ds1302_control_add, 0x00); // ?????
+    write1ByteToDs1302(ds1302_sec_add, 0x80);     // ??
+    // Ds1302_Write_Byte(ds1302_charger_add,0xa9);			//????
+    write1ByteToDs1302(ds1302_year_add, time_buf[1]);  // ?
+    write1ByteToDs1302(ds1302_month_add, time_buf[2]); // ?
+    write1ByteToDs1302(ds1302_date_add, time_buf[3]);  // ?
+    write1ByteToDs1302(ds1302_hr_add, time_buf[4]);    // ?
+    write1ByteToDs1302(ds1302_min_add, time_buf[5]);   // ?
+    write1ByteToDs1302(ds1302_sec_add, time_buf[6]);   // ?
+    write1ByteToDs1302(ds1302_day_add, time_buf[7]);   // ?
+    write1ByteToDs1302(ds1302_control_add, 0x80);      // ?????
 }
 
-//从DS1302读出时钟数据
-void Ds1302_Read_Time(void)
+// ?DS1302??????
+void readTimeFromDs1302(void)
 {
     unsigned char i, tmp;
-    time_buf[1] = Ds1302_Read_Byte(ds1302_year_add);		//年
-    time_buf[2] = Ds1302_Read_Byte(ds1302_month_add);		//月
-    time_buf[3] = Ds1302_Read_Byte(ds1302_date_add);		//日
-    time_buf[4] = Ds1302_Read_Byte(ds1302_hr_add);		//时
-    time_buf[5] = Ds1302_Read_Byte(ds1302_min_add);		//分
-    time_buf[6] = (Ds1302_Read_Byte(ds1302_sec_add)) & 0x7F; //秒
-    time_buf[7] = Ds1302_Read_Byte(ds1302_day_add);		//周
+    currentTimeData[0] = read1ByteFromDs1302(ds1302_year_add);         // ?
+    currentTimeData[1] = read1ByteFromDs1302(ds1302_month_add);        // ?
+    currentTimeData[2] = read1ByteFromDs1302(ds1302_date_add);         // ?
+    currentTimeData[3] = read1ByteFromDs1302(ds1302_hr_add);           // ?
+    currentTimeData[4] = read1ByteFromDs1302(ds1302_min_add);          // ?
+    currentTimeData[5] = (read1ByteFromDs1302(ds1302_sec_add)) & 0x7F; // ?
+    currentTimeData[6] = read1ByteFromDs1302(ds1302_day_add);          // ?
 
-
-    for(i = 0; i < 8; i++)
+    for (i = 0; i < 8; i++)
     {
-        //BCD处理
+        // BCD??
         tmp = time_buf[i] / 16;
         time_buf1[i] = time_buf[i] % 16;
         time_buf1[i] = time_buf1[i] + tmp * 10;
     }
 }
 
-//DS1302初始化
+unsigned char *getTimeData()
+{
+    return currentTimeData;
+}
+
+// DS1302???
 void ds1302Init(void)
 {
-    RST_CLR;			//RST脚置低
-    SCK_CLR;			//SCK脚置低
-    Ds1302_Write_Byte(ds1302_sec_add, 0x00);
+    RST_CLR;
+    SCK_CLR;
+    write1ByteToDs1302(ds1302_sec_add, 0x00);
 }

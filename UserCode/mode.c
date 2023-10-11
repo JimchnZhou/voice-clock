@@ -3,71 +3,74 @@
 
 #define Debug_SendData Send_Data1
 
-static unsigned char Mode = 0; // ²»Í¬Ä£Ê½ 0Õı³£ÏÔÊ¾ 1~3µ÷ÕûÊ±£¬·Ö£¬Ãë
+static unsigned char mode = 0; // ä¸åŒæ¨¡å¼ 0æ­£å¸¸æ˜¾ç¤º 1~3è°ƒæ•´æ—¶ï¼Œåˆ†ï¼Œç§’
 
-code unsigned char ModeColor[7][3] = {{0x01, 0x10, 0x20}, {0x00, 0xff, 0x00}, {0xff, 0x00, 0x00}, {0x00, 0x00, 0xff}, {0xff, 0xff, 0x00}, {0x00, 0xff, 0xff}, {0xff, 0xff, 0xff}};
-
-static unsigned char Button_Value = 0; // °´¼ü¼Ó¼õÖ®ºóµÄÊıÖµ
-
-// ³õÊ¼»¯ÒµÎñÂß¼­
-void modeInit(void)
+// è¿è¡Œæ¨¡å¼åˆå§‹åŒ–
+void runningModeInit(void)
 {
-    Mode = 0;
-    Button_Value = 0;
+    mode = 0;
+    // Button_Value = 0;
 }
 
-// ¸Ä±äÔËĞĞÄ£Ê½
-void changeMode(void)
+// æ”¹å˜è¿è¡Œæ¨¡å¼
+void changeRunningMode(void)
 {
-    Mode++;
+    mode++;
 
-    if (Mode == 1)
+    if (mode == 1)
     {
     }
-    if (Mode == 2)
+    if (mode == 2)
     {
     }
-    if (Mode == 3)
+    if (mode == 3)
     {
     }
-    if (Mode == 4) // Ğ£×¼Ê±ÖÓ
+    if (mode == 4) // æ ¡å‡†æ—¶é’Ÿ
     {
     }
-    if (Mode > 3)
-        Mode = 0;
+    if (mode > 3)
+        mode = 0;
 }
 
-// »ñÈ¡µ±Ç°ÔËĞĞÄ£Ê½
+// è®¾ç½®è¿è¡Œæ¨¡å¼
+unsigned char setRunningMode(unsigned char modeValue)
+{
+    mode = modeValue;
+    return 0;
+}
+
+// è·å–å½“å‰è¿è¡Œæ¨¡å¼
 unsigned char getRunningMode()
 {
-    return Mode;
+    return mode;
 }
 
-// °´¼ü+Âß¼­
+// æŒ‰é”®+é€»è¾‘
 void Mode_Button_Up(void)
 {
-    if (Mode == 0)
+    if (mode == 0)
         return;
     Button_Value++;
-    // if (Mode < 7)
+    // if (mode < 7)
     // {
     // 	if (Button_Value > 6)
     // 		Button_Value = 0;
-    // 	WS2812_SetColor(Mode - 1, ModeColor[Button_Value][0], ModeColor[Button_Value][1], ModeColor[Button_Value][2]);
+    // 	WS2812_SetColor(mode - 1, ModeColor[Button_Value][0], ModeColor[Button_Value][1], ModeColor[Button_Value][2]);
     // }
-    if (Mode == 1)
+    if (mode == 1)
     {
         if (Button_Value > 23)
             Button_Value = 0;
         RTC_Timer.Hour = Button_Value;
     }
-    if (Mode == 2)
+    if (mode == 2)
     {
         if (Button_Value > 59)
             Button_Value = 0;
         RTC_Timer.Minutes = Button_Value;
     }
-    if (Mode == 3)
+    if (mode == 3)
     {
         if (Button_Value > 59)
             Button_Value = 0;
@@ -75,31 +78,31 @@ void Mode_Button_Up(void)
     }
 }
 
-// °´¼ü-Âß¼­
+// æŒ‰é”®-é€»è¾‘
 void Mode_Button_Down(void)
 {
-    if (Mode == 0)
+    if (mode == 0)
         return;
     Button_Value--;
-    // if (Mode < 7)
+    // if (mode < 7)
     // {
     // 	if (Button_Value > 6)
     // 		Button_Value = 0;
-    // 	WS2812_SetColor(Mode - 1, ModeColor[Button_Value][0], ModeColor[Button_Value][1], ModeColor[Button_Value][2]);
+    // 	WS2812_SetColor(mode - 1, ModeColor[Button_Value][0], ModeColor[Button_Value][1], ModeColor[Button_Value][2]);
     // }
-    if (Mode == 1)
+    if (mode == 1)
     {
         if (Button_Value > 23)
             Button_Value = 23;
         RTC_Timer.Hour = Button_Value;
     }
-    if (Mode == 8)
+    if (mode == 8)
     {
         if (Button_Value > 59)
             Button_Value = 59;
         RTC_Timer.Minutes = Button_Value;
     }
-    if (Mode == 9)
+    if (mode == 9)
     {
         if (Button_Value > 59)
             Button_Value = 59;
@@ -107,32 +110,32 @@ void Mode_Button_Down(void)
     }
 }
 
-// ²»Í¬Ä£Ê½¹ÜÀí
+// ä¸åŒæ¨¡å¼ç®¡ç†
 void Mode_Loop(void)
 {
-    switch (Mode)
+    switch (mode)
     {
     case 0:
     {
-        //		Get_Time(&RTC_Timer); // »ñÈ¡Ê±¼ä
-        // »ñÈ¡ÎÂÊª¶È
-        // ÏÔÊ¾
+        //		Get_Time(&RTC_Timer); // è·å–æ—¶é—´
+        // è·å–æ¸©æ¹¿åº¦
+        // æ˜¾ç¤º
 
         break;
     }
     case 1:
     {
-        // µ÷Ê±
+        // è°ƒæ—¶
         break;
     }
     case 2:
     {
-        // µ÷·Ö
+        // è°ƒåˆ†
         break;
     }
     case 3:
     {
-        // µ÷Ãë
+        // è°ƒç§’
         break;
     }
     }

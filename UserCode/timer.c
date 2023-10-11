@@ -2,19 +2,19 @@
 #include "sys_loop.h"
 #include "button.h"
 
-//��ʼ����ʱ��0��10ms
+//初始化定时器0，10ms
 void Timer0_Init(void)
 {
-    AUXR &= 0x7F;		//��ʱ��ʱ��12Tģʽ
-    TMOD &= 0xF0;		//���ö�ʱ��ģʽ
-    TL0 = 0x00;		//���ö�ʱ��ֵ
-    TH0 = 0xDC;		//���ö�ʱ��ֵ
-    TF0 = 0;		//���TF0��־
-    TR0 = 1;		//��ʱ��0��ʼ��ʱ
-    ET0 = 1;//ʹ�ܶ�ʱ���ж�
+    AUXR &= 0x7F;		//定时器时钟12T模式
+    TMOD &= 0xF0;		//设置定时器模式
+    TL0 = 0x00;		//设置定时初值
+    TH0 = 0xDC;		//设置定时初值
+    TF0 = 0;		//清除TF0标志
+    TR0 = 1;		//定时器0开始计时
+    ET0 = 1;//使能定时器中断
 }
 
-//��ʱ��0�жϺ���
+//定时器0中断函数
 void Timer0_Interrupt(void) interrupt 1
 {
     SYS_TimerInterrupt_App();
