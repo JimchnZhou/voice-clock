@@ -3,6 +3,7 @@
 #include "mode.h"
 #include "ds1302.h"
 #include "gpio.h"
+#include "wt588.h"
 
 sbit Button_IO_0 = P3 ^ 2; // 按键1接P3.2口
 sbit Button_IO_1 = P3 ^ 3; // 按键2接P3.3口
@@ -11,8 +12,8 @@ sbit Button_IO_2 = P3 ^ 4; // 按键3接P3.4口
 #define BUTTON_COUNT 3 // 按键的数量
 
 #define Button_Click_Time 5       // 单击时间
-#define Button_Long_Press_Time 50 // 长按时间
-#define Button_Timeout_Time 150   // 超时时间
+#define Button_Long_Press_Time 20 // 长按时间
+#define Button_Timeout_Time 50    // 超时时间
 
 static unsigned int Button_Hold_Timer[BUTTON_COUNT];    // 按键按下的时长
 static void (*Click_Fun_List[BUTTON_COUNT])(void);      // 单击函数列表
@@ -33,7 +34,7 @@ void buttonInit(void)
 }
 
 // 给按钮添加处理函数，“C”为单击，“L”为长按、“O”为超时
-void addActionToButton(unsigned char CH, unsigned char Type, void (*Fun)(void))
+void addEventToButton(unsigned char CH, unsigned char Type, void (*Fun)(void))
 {
     if (Type == 'C')
     {
@@ -125,24 +126,24 @@ void Button_Loop(void)
     }
 }
 
-// 按钮 0 单击
-void button0ClickAction()
+// 按钮 0 单击事件
+void button0OnClickEvent()
 {
     switch (getRunningMode())
     {
     case 0: // 语音播报时间
-
+        speakTime();
         break;
-    case 1: // 保存时，进入模式 2
-        setHourToDs1302();
+    case 1: // 保存小时，进入模式 2
+        writeTimeToDs1302();
         setRunningMode(2);
         break;
     case 2: // 保存分，进入模式 3
-        setMinuteToDs1302();
+        writeTimeToDs1302();
         setRunningMode(3);
         break;
     case 3: // 保存秒，进入模式 1
-        setSecondToDs1302();
+        writeTimeToDs1302();
         setRunningMode(1);
         break;
     default:
@@ -150,24 +151,24 @@ void button0ClickAction()
     }
 }
 
-// 按钮 0 长按
-void button0LongPressAction()
+// 按钮 0 长按事件
+void button0LongPressEvent()
 {
     switch (getRunningMode())
     {
     case 0: // 进入模式 1
         setRunningMode(1);
         break;
-    case 1: // 保存时，进入模式 0
-setHourToDs1302();
+    case 1: // 保存小时，进入模式 0
+        writeTimeToDs1302();
         setRunningMode(0);
         break;
-    case 2: // 保存分，进入模式 0
-setMinuteToDs1302();
+    case 2: // 保存分钟，进入模式 0
+        writeTimeToDs1302();
         setRunningMode(0);
         break;
-    case 3: // 保存秒，进入模式 0
-setSecondToDs1302();
+    case 3: // 保存秒钟，进入模式 0
+        writeTimeToDs1302();
         setRunningMode(0);
         break;
     default:
@@ -176,21 +177,34 @@ setSecondToDs1302();
 }
 
 // 按钮 1 单击
-void button1ClickAction()
+void button1OnClickEvent()
 {
+    unsigned char timeBuff;
     switch (getRunningMode())
     {
     case 0: // 语音播报温度
-
+        speakTemperature();
         break;
     case 1: // 调时，加
-
+        timeBuff = getNewTimeData(3);
+        timeBuff++;
+        if (timeBuff > 23)
+        {
+            timeBuff = 0;
+        }
+        setNewTimeData(3, timeBuff);
         break;
     case 2: // 调分，加
-
+        timeBuff = getNewTimeData(4);
+        timeBuff++;
+        if (timeBuff > 59)
+        {
+            timeBuff = 0;
+        }
+        setNewTimeData(4, timeBuff);
         break;
     case 3: // 调秒，归零
-
+        setNewTimeData(5, 0);
         break;
     default:
         break;
@@ -198,7 +212,7 @@ void button1ClickAction()
 }
 
 // 按钮 1 长按
-void button1LongPressAction()
+void button1LongPressEvent()
 {
     switch (getRunningMode())
     {
@@ -219,21 +233,34 @@ void button1LongPressAction()
 }
 
 // 按钮 2 单击
-void button2ClickAction()
+void button2OnClickEvent()
 {
+    unsigned char timeBuff;
     switch (getRunningMode())
     {
     case 0: // 语音播报湿度
-
+        speakHumidity();
         break;
     case 1: // 调时，减
-
+        timeBuff = getNewTimeData(3);
+        timeBuff--;
+        if (timeBuff > 23)
+        {
+            timeBuff = 23;
+        }
+        setNewTimeData(3, timeBuff);
         break;
     case 2: // 调分，减
-
+        timeBuff = getNewTimeData(4);
+        timeBuff--;
+        if (timeBuff > 59)
+        {
+            timeBuff = 59;
+        }
+        setNewTimeData(4, timeBuff);
         break;
     case 3: // 调秒，归零
-
+        setNewTimeData(5, 0);
         break;
     default:
         break;
@@ -241,7 +268,7 @@ void button2ClickAction()
 }
 
 // 按钮 2 长按：退出到默认模式
-void button2LongPressAction()
+void button2LongPressEvent()
 {
     setRunningMode(0);
 }

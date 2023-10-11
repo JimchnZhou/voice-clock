@@ -24,26 +24,39 @@
 94-99:	加、减、乘、除、等于、归零
 */
 
-// WT588F一线单字节控制程序
+
+// WT588F 一线 单字节 控制程序
 void One_Wire_Send_Byte(unsigned char Byte_Value);
 
-// WT588F一线双字节控制程序
+// WT588F 一线 双字节 控制程序
 void One_Wire_Send_Double(unsigned int Double_Value);
 
-// WT588F一线单字节连码示例(F3 + 01 + F3 + 02)
+// WT588F 一线 单字节 连码示例(F3 + 01 + F3 + 02)
 void List_1A_Play_WT588F(void);
 
-// WT588F一线双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
+// WT588F 一线 双字节 连码示例(FFF3 + 0001 + FFF3 + 0002)
 void List_1A_Play_WT588F_Couple(void);
 
-// WT588F二线单字节控制程序
+// WT588F 二线 单字节 控制程序
 void Two_Wire_Send_Byte(unsigned char Byte_Value);
 
-// WT588F二线双字节控制程序
+// WT588F 二线 双字节 控制程序
 void Two_Wire_Send_Double(unsigned int Double_Value);
 
-// WT588F二线单字节连码示例(F3 + 01 + F3 + 02)
+// WT588F 二线 单字节 连码示例
 void List_2A_Play_WT588F(void);
 
-// WT588F二线双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
+// WT588F 二线 双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
 void List_2A_Play_WT588F_Couple(void);
+
+// 播报时间
+void speakTime();
+
+// 播报温度
+void speakTemperature();
+
+// 播报湿度
+void speakHumidity();
+
+
+

@@ -1,5 +1,7 @@
 #include "STC89.h"
 #include "mode.h"
+#include "ds1302.h"
+#include "lcd1602.h"
 
 #define Debug_SendData Send_Data1
 
@@ -36,6 +38,12 @@ void changeRunningMode(void)
 // 设置运行模式
 unsigned char setRunningMode(unsigned char modeValue)
 {
+    unsigned char i;
+    for (i = 0; i < 7; i++)
+    {
+        setNewTimeData(i,getCurrentTimeData());
+    }
+    LCD1602_Clear();
     mode = modeValue;
     return 0;
 }
@@ -51,7 +59,7 @@ void Mode_Button_Up(void)
 {
     if (mode == 0)
         return;
-    Button_Value++;
+    //    Button_Value++;
     // if (mode < 7)
     // {
     // 	if (Button_Value > 6)
@@ -60,21 +68,21 @@ void Mode_Button_Up(void)
     // }
     if (mode == 1)
     {
-        if (Button_Value > 23)
-            Button_Value = 0;
-        RTC_Timer.Hour = Button_Value;
+        //        if (Button_Value > 23)
+        //            Button_Value = 0;
+        //        RTC_Timer.Hour = Button_Value;
     }
     if (mode == 2)
     {
-        if (Button_Value > 59)
-            Button_Value = 0;
-        RTC_Timer.Minutes = Button_Value;
+        //        if (Button_Value > 59)
+        //            Button_Value = 0;
+        //        RTC_Timer.Minutes = Button_Value;
     }
     if (mode == 3)
     {
-        if (Button_Value > 59)
-            Button_Value = 0;
-        RTC_Timer.Seconds = Button_Value;
+        //        if (Button_Value > 59)
+        //            Button_Value = 0;
+        //        RTC_Timer.Seconds = Button_Value;
     }
 }
 
@@ -83,7 +91,7 @@ void Mode_Button_Down(void)
 {
     if (mode == 0)
         return;
-    Button_Value--;
+    //    Button_Value--;
     // if (mode < 7)
     // {
     // 	if (Button_Value > 6)
@@ -92,21 +100,21 @@ void Mode_Button_Down(void)
     // }
     if (mode == 1)
     {
-        if (Button_Value > 23)
-            Button_Value = 23;
-        RTC_Timer.Hour = Button_Value;
+        //        if (Button_Value > 23)
+        //            Button_Value = 23;
+        //        RTC_Timer.Hour = Button_Value;
     }
     if (mode == 8)
     {
-        if (Button_Value > 59)
-            Button_Value = 59;
-        RTC_Timer.Minutes = Button_Value;
+        //        if (Button_Value > 59)
+        //            Button_Value = 59;
+        //        RTC_Timer.Minutes = Button_Value;
     }
     if (mode == 9)
     {
-        if (Button_Value > 59)
-            Button_Value = 59;
-        RTC_Timer.Seconds = Button_Value;
+        //        if (Button_Value > 59)
+        //            Button_Value = 59;
+        //        RTC_Timer.Seconds = Button_Value;
     }
 }
 

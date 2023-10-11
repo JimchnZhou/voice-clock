@@ -38,18 +38,18 @@ void main()
     // 语音测试
 
     // 绑定函数
-    addActionToButton(0, 'C', button0ClickAction); // 按键0添加单击函数：切换模式
-    addActionToButton(1, 'C', button1ClickAction); // 按键1添加单击函数
-    addActionToButton(2, 'C', button2ClickAction); // 按键2添加单击函数
-    addActionToButton(0, 'L', button0LongPressAction);//按键0添加长按函数
-    addActionToButton(1, 'L', button1LongPressAction); // 按键1添加长按函数
-    addActionToButton(2, 'L', button2LongPressAction); // 按键2添加长按函数
+    addEventToButton(0, 'C', button0OnClickEvent); // 按键0添加单击函数：切换模式
+    addEventToButton(1, 'C', button1OnClickEvent); // 按键1添加单击函数
+    addEventToButton(2, 'C', button2OnClickEvent); // 按键2添加单击函数
+    addEventToButton(0, 'L', button0LongPressEvent);//按键0添加长按函数
+    addEventToButton(1, 'L', button1LongPressEvent); // 按键1添加长按函数
+    addEventToButton(2, 'L', button2LongPressEvent); // 按键2添加长按函数
 
-    SYS_New_LoopFun(25, Ds1302_Read_Time); // 添加读取时间到系统调度，每25*10ms读取一次时间
+    SYS_New_LoopFun(25, readTimeFromDs1302); // 添加读取时间到系统调度，每25*10ms读取一次时间
     SYS_New_LoopFun(25, lcd1602Display);   // 添加显示到系统调度，每25*10ms刷新一次显示
     SYS_New_LoopFun(2, Button_Loop);       // 添加按键到系统调度，每2*10ms检测一次按键
 
-    List_2A_Play_WT588F();
+    // List_2A_Play_WT588F();
     // Two_Wire_Send_Byte(0x01);
 
     EA = 1;

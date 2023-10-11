@@ -178,65 +178,6 @@ void Two_Wire_Send_Double(unsigned int Double_Value)
 // WT588F 二线 单字节 连码示例(F3 + 01 + F3 + 02)
 void List_2A_Play_WT588F(void)
 {
-    // 现在是
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(59);
-    Delay_ms(5); // 延时 5ms
-
-    // 北京时间
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(60);
-    Delay_ms(5); // 延时 5ms
-
-    // 二
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(2);
-    Delay_ms(5); // 延时 5ms
-
-    // 十
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(10);
-    Delay_ms(5); // 延时 5ms
-
-    // 二
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(2);
-    Delay_ms(5); // 延时 5ms
-
-    // 点
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(65);
-    Delay_ms(5); // 延时 5ms
-
-    // 五
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(5);
-    Delay_ms(5); // 延时 5ms
-
-    // 十
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(10);
-    Delay_ms(5); // 延时 5ms
-
-    // 一
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(1);
-    Delay_ms(5); // 延时 5ms
-
-    // 分
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(66);
-    Delay_ms(5); // 延时 5ms
 
     // 温度
     Two_Wire_Send_Byte(0xF3);
@@ -315,21 +256,115 @@ void List_2A_Play_WT588F_Couple(void)
 // 播报时间
 void speakTime()
 {
+    unsigned char hour = getCurrentTimeData(3);
+    unsigned char minute = getCurrentTimeData(4);
+    // 现在是
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(59);
+    Delay_ms(5); // 延时 5ms
 
+    // 北京时间
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(60);
+    Delay_ms(5); // 延时 5ms
 
+    if (hour >= 20)
+    {
+        // 二
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(2);
+        Delay_ms(5); // 延时 5ms
+    }
+    if (hour >= 10)
+    {
+        // 十
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(10);
+        Delay_ms(5); // 延时 5ms
+    }
+
+    // 个位
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(hour % 10);
+    Delay_ms(5); // 延时 5ms
+
+    // 点
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(65);
+    Delay_ms(5); // 延时 5ms
+
+    if (minute >= 20)
+    {
+        // 十位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(minute / 10);
+        Delay_ms(5); // 延时 5ms
+    }
+    if (minute >= 10)
+    {
+        // 十
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(10);
+        Delay_ms(5); // 延时 5ms
+    }
+    if ((minute % 10) != 0)
+    {
+        // 个位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(minute % 10);
+        Delay_ms(5); // 延时 5ms
+    }
+
+    // 分
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(66);
+    Delay_ms(5); // 延时 5ms
 }
 
-//播报温度
+// 播报温度
 void speakTemperature()
-{
+{ // 温度
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(54);
+    Delay_ms(5); // 延时 5ms
 
+    // 3
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(3);
+    Delay_ms(5); // 延时 5ms
+
+    // 10
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(10);
+    Delay_ms(5); // 延时 5ms
+
+    // 2
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(2);
+    Delay_ms(5); // 延时 5ms
 }
 
-//播报湿度
+// 播报湿度
 void speakHumidity()
 {
-
-
+    Two_Wire_Send_Byte(0xF3);
+    Delay_ms(2); // 延时 2ms
+    Two_Wire_Send_Byte(55);
+    Delay_ms(5); // 延时 5ms
 }
 /*
 //欢迎使用智能语音电子时钟
@@ -356,98 +391,5 @@ void speakHumidity()
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); //延时 2ms
     Two_Wire_Send_Byte(41);
-    Delay_ms(5); //延时 5ms
-*/
-
-/*
-//报时
-    //现在是
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(59);
-    Delay_ms(5); //延时 5ms
-
-    //北京时间
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(60);
-    Delay_ms(5); //延时 5ms
-
-    //二
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
-
-    //十
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
-
-//二
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
-
-        //点
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(65);
-    Delay_ms(5); //延时 5ms
-
-//五
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(5);
-    Delay_ms(5); //延时 5ms
-
-//十
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
-
-//一
-            Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(1);
-    Delay_ms(5); //延时 5ms
-
-//分
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(66);
-    Delay_ms(5); //延时 5ms
-
-                //温度
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(54);
-    Delay_ms(5); //延时 5ms
-
-                //3
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(3);
-    Delay_ms(5); //延时 5ms
-
-                //10
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(10);
-    Delay_ms(5); //延时 5ms
-
-                //2
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(2);
-    Delay_ms(5); //延时 5ms
-
-                //湿度
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); //延时 2ms
-    Two_Wire_Send_Byte(55);
     Delay_ms(5); //延时 5ms
 */

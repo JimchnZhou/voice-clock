@@ -1,9 +1,9 @@
 #include "timer.h"
-#include "sys_loop.h"
+#include "sysloop.h"
 #include "button.h"
 
 //初始化定时器0，10ms
-void Timer0_Init(void)
+void timer0Init(void)
 {
     AUXR &= 0x7F;		//定时器时钟12T模式
     TMOD &= 0xF0;		//设置定时器模式
@@ -15,7 +15,7 @@ void Timer0_Init(void)
 }
 
 //定时器0中断函数
-void Timer0_Interrupt(void) interrupt 1
+void timer0Interrupt(void) interrupt 1
 {
     SYS_TimerInterrupt_App();
 }
