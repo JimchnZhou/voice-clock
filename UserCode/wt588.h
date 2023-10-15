@@ -24,7 +24,6 @@
 94-99:	加、减、乘、除、等于、归零
 */
 
-
 // WT588F 一线 单字节 控制程序
 void One_Wire_Send_Byte(unsigned char Byte_Value);
 
@@ -58,5 +57,6 @@ void speakTemperature();
 // 播报湿度
 void speakHumidity();
 
-
+// WT588初始化
+void wt588fInit();
 
