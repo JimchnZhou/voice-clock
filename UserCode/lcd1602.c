@@ -4,6 +4,7 @@
 #include "delay.h"
 #include "mode.h"
 #include "ds1302.h"
+#include "dht11.h"
 
 sbit RS = P2 ^ 7;
 sbit RW = P2 ^ 6;
@@ -124,7 +125,9 @@ void lcd1602Display(void)
     {
     case 0:                                                                                                                  // 正常显示                                                                                   // 显示第一行
         sprintf(temp, "%02d:%02d:%02d", (int)getCurrentTimeData(3), (int)getCurrentTimeData(4), (int)getCurrentTimeData(5)); // 时分秒
-        LCD1602_Write_String(0, 0, temp);                                                                                    // 显示第二行
+        LCD1602_Write_String(0, 0, temp);
+        sprintf(temp, "TE：%02f RH：%02d", (int)getTempData(), (int)getHumiData()); // 时分秒
+        LCD1602_Write_String(0, 1, temp);                                           // 显示第二行
         break;
     case 1:                                            // 调小时
         LCD1602_Write_String(0, 0, "SET Hour");        // 第一行
