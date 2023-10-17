@@ -1,4 +1,4 @@
-#include "STC89.h"
+#include "stc89.h"
 #include "gpio.h"
 #include "delay.h"
 
@@ -46,7 +46,7 @@ void Beep_OFF(void)
 void Beep_Once(unsigned int ms)
 {
     Beep_ON();
-    Delay_ms(ms);
+    delayMs(ms);
     Beep_OFF();
 }
 
@@ -54,6 +54,6 @@ void Beep_Once(unsigned int ms)
 void Beep_300ms(void)
 {
     Beep_ON();
-    Delay_ms(300);
+    delayMs(300);
     Beep_OFF();
 }

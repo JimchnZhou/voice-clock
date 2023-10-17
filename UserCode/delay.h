@@ -2,10 +2,10 @@
 #define __DELAY_H__
 
 //微秒延时函数
-void	Delay_us(unsigned int n);
+void	delayUs(unsigned int n);
 
 //毫秒延时函数
-void	Delay_ms(unsigned int n);
+void	delayMs(unsigned int n);
 
 
 #endif

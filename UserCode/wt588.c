@@ -16,22 +16,22 @@ void One_Wire_Send_Byte(unsigned char Byte_Value)
     unsigned char S_DATA, i;
     S_DATA = Byte_Value;
     One_Wire_SDA = 0;       // 拉低数据线
-    Delay_ms(5);            // 延时5ms
+    delayMs(5);            // 延时5ms
     for (i = 0; i < 8; i++) // 1Byte=8bit
     {
         if ((S_DATA & 0X01) == 1) // 发送1
         {
             One_Wire_SDA = 1;
-            Delay_us(600); // 延时 600us
+            delayUs(600); // 延时 600us
             One_Wire_SDA = 0;
-            Delay_us(200); // 延时 200us
+            delayUs(200); // 延时 200us
         }
         else // 发送0
         {
             One_Wire_SDA = 1;
-            Delay_us(200); // 延时 200us
+            delayUs(200); // 延时 200us
             One_Wire_SDA = 0;
-            Delay_us(600); // 延时 600us
+            delayUs(600); // 延时 600us
         }
         S_DATA = S_DATA >> 1;
     }
@@ -53,7 +53,7 @@ void One_Wire_Send_Double(unsigned int Double_Value)
     //    num_temp = 16;
 
     One_Wire_SDA = 0; // 拉低数据线
-    Delay_ms(5);      // 延时 5mS
+    delayMs(5);      // 延时 5mS
     B_DATA = ddata_temp & 0X0001;
     //    for(i = 0; i < num_temp; i++)
     for (i = 0; i < 16; i++)
@@ -61,24 +61,24 @@ void One_Wire_Send_Double(unsigned int Double_Value)
         if (i == 8)
         {
             One_Wire_SDA = 1;
-            Delay_ms(2); // 延时 2MS
+            delayMs(2); // 延时 2MS
             One_Wire_SDA = 0;
-            Delay_ms(5); // 延时 5MS
+            delayMs(5); // 延时 5MS
         }
         One_Wire_SDA = 1; // 拉高数据传输线 ,准备传输数据
         if (B_DATA == 0)
         {
             /*表示逻辑电平 0*/
-            Delay_us(200); // 延时 200us
+            delayUs(200); // 延时 200us
             One_Wire_SDA = 0;
-            Delay_us(600); // 延时 600us
+            delayUs(600); // 延时 600us
         }
         else
         {
             /*表示逻辑电平 1*/
-            Delay_us(600); // 延时 600us
+            delayUs(600); // 延时 600us
             One_Wire_SDA = 0;
-            Delay_us(200); // 延时 200us
+            delayUs(200); // 延时 200us
         }
         ddata_temp = ddata_temp >> 1;
         B_DATA = ddata_temp & 0x0001;
@@ -90,26 +90,26 @@ void One_Wire_Send_Double(unsigned int Double_Value)
 void List_1A_Play_WT588F(void)
 {
     One_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     One_Wire_Send_Byte(0x01);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
     One_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     One_Wire_Send_Byte(0x02);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 }
 
 // WT588F 一线 双字节 连码示例(FFF3 + 0001 + FFF3 + 0002)
 void List_1A_Play_WT588F_Couple(void)
 {
     One_Wire_Send_Double(0xFFF3);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
     One_Wire_Send_Double(0x0001);
-    Delay_ms(10); // 延时 10ms
+    delayMs(10); // 延时 10ms
     One_Wire_Send_Double(0xFFF3);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
     One_Wire_Send_Double(0x0001);
-    Delay_ms(10); // 延时 10ms
+    delayMs(10); // 延时 10ms
 }
 
 // WT588F 二线 单字节 控制程序
@@ -122,16 +122,16 @@ void Two_Wire_Send_Byte(unsigned char Byte_Value)
     S_DATA = Byte_Value;
 
     Two_Wire_SCL = 0; // 拉低 CLK
-    Delay_ms(5);      // 延时 5ms
+    delayMs(5);      // 延时 5ms
     B_DATA = S_DATA & 0X01;
 
     for (i = 0; i < 8; i++)
     {
         Two_Wire_SCL = 0;      // 拉低CLK，为发送数据做准备
         Two_Wire_SDA = B_DATA; // 传输低位数据
-        Delay_us(300);         // 延时300us
+        delayUs(300);         // 延时300us
         Two_Wire_SCL = 1;      // 拉高CLK,上升沿接收数据
-        Delay_us(300);         // 延时350us
+        delayUs(300);         // 延时350us
         S_DATA = S_DATA >> 1;  // 数据右移
         B_DATA = S_DATA & 0X01;
     }
@@ -153,22 +153,22 @@ void Two_Wire_Send_Double(unsigned int Double_Value)
     ddata_temp |= pdata_temp;         // 合并
 
     Two_Wire_SCL = 0; // 拉低 CLK
-    Delay_ms(5);      // 延时 5ms
+    delayMs(5);      // 延时 5ms
     for (i = 0; i < 16; i++)
     {
         if (i == 8)
         {
             Two_Wire_SCL = 1;
             Two_Wire_SDA = 1;
-            Delay_ms(2); // 延时 2ms
+            delayMs(2); // 延时 2ms
             Two_Wire_SCL = 0;
-            Delay_ms(5); // 延时 5ms
+            delayMs(5); // 延时 5ms
         }
         Two_Wire_SCL = 0;
         Two_Wire_SDA = ddata_temp & 0X0001;
-        Delay_us(200); // 延时 200us
+        delayUs(200); // 延时 200us
         Two_Wire_SCL = 1;
-        Delay_us(200); // 延时 200us
+        delayUs(200); // 延时 200us
         ddata_temp = ddata_temp >> 1;
     }
     Two_Wire_SCL = 1;
@@ -181,76 +181,76 @@ void List_2A_Play_WT588F(void)
 
     // 温度
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(54);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 3
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(3);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 10
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(10);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 2
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 湿度
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(55);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 3
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 10
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(10);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 2
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(2);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 点
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(65);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 8
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(8);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 }
 
 // WT588F 二线 双字节连码示例(FFF3 + 0001 + FFF3 + 0002)
 void List_2A_Play_WT588F_Couple(void)
 {
     Two_Wire_Send_Double(0xFFF3);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
     Two_Wire_Send_Double(0x0001);
-    Delay_ms(10); // 延时 10ms
+    delayMs(10); // 延时 10ms
     Two_Wire_Send_Double(0xFFF3);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
     Two_Wire_Send_Double(0x0002);
-    Delay_ms(10); // 延时 10ms
+    delayMs(10); // 延时 10ms
 }
 
 // 播报时间
@@ -260,75 +260,75 @@ void speakTime()
     unsigned char minute = getCurrentTimeData(4);
     // 现在是
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(59);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 北京时间
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(60);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     if (hour >= 20)
     {
         // 二
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(2);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if (hour >= 10)
     {
         // 十
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
 
     // 个位
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(hour % 10);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 点
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(65);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     if (minute >= 20)
     {
         // 十位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(minute / 10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if (minute >= 10)
     {
         // 十
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if ((minute % 10) != 0)
     {
         // 个位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(minute % 10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
 
     // 分
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(66);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     // 整
     // Two_Wire_Send_Byte(0xF3);
@@ -345,53 +345,53 @@ void speakTemperature()
 
     // 温度
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(54);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     if (temp >= 100 && temp < 1000) //
     {
         // 十位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(temp / 100);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
 
         // 十
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if (((temp / 10) % 10) != 0)
     {
         // 个位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte((temp / 10) % 10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if (temp == 0)
     {
         // 零
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(0);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if (temp > 0 && temp < 1)
     {
         // 点
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(65);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
 
         // 小数位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(temp % 10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
 }
 
@@ -402,39 +402,39 @@ void speakHumidity()
 
     // 湿度
     Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
+    delayMs(2); // 延时 2ms
     Two_Wire_Send_Byte(55);
-    Delay_ms(5); // 延时 5ms
+    delayMs(5); // 延时 5ms
 
     if (humi >= 10 && humi < 100) //
     {
         // 十位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(humi / 10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
 
         // 十
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if ((humi % 10) != 0)
     {
         // 个位
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(humi % 10);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
     if (humi == 0)
     {
         // 零
         Two_Wire_Send_Byte(0xF3);
-        Delay_ms(2); // 延时 2ms
+        delayMs(2); // 延时 2ms
         Two_Wire_Send_Byte(0);
-        Delay_ms(5); // 延时 5ms
+        delayMs(5); // 延时 5ms
     }
 }
 
