@@ -329,42 +329,113 @@ void speakTime()
     Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(66);
     Delay_ms(5); // 延时 5ms
+
+    // 整
+    // Two_Wire_Send_Byte(0xF3);
+    // Delay_ms(2); // 延时 2ms
+    // Two_Wire_Send_Byte(68);
+    // Delay_ms(5); // 延时 5ms
 }
 
 // 播报温度
 void speakTemperature()
-{ // 温度
+{
+    unsigned char temp = getTempData();
+    temp *= 10;
+
+    // 温度
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(54);
     Delay_ms(5); // 延时 5ms
 
-    // 3
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(3);
-    Delay_ms(5); // 延时 5ms
+    if (temp >= 100 && temp < 1000) //
+    {
+        // 十位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(temp / 100);
+        Delay_ms(5); // 延时 5ms
 
-    // 10
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(10);
-    Delay_ms(5); // 延时 5ms
+        // 十
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(10);
+        Delay_ms(5); // 延时 5ms
+    }
+    if (((temp / 10) % 10) != 0)
+    {
+        // 个位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte((temp / 10) % 10);
+        Delay_ms(5); // 延时 5ms
+    }
+    if (temp == 0)
+    {
+        // 零
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(0);
+        Delay_ms(5); // 延时 5ms
+    }
+    if (temp > 0 && temp < 1)
+    {
+        // 点
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(65);
+        Delay_ms(5); // 延时 5ms
 
-    // 2
-    Two_Wire_Send_Byte(0xF3);
-    Delay_ms(2); // 延时 2ms
-    Two_Wire_Send_Byte(2);
-    Delay_ms(5); // 延时 5ms
+        // 小数位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(temp % 10);
+        Delay_ms(5); // 延时 5ms
+    }
 }
 
 // 播报湿度
 void speakHumidity()
 {
+    unsigned char humi = getHumiData();
+
+    // 湿度
     Two_Wire_Send_Byte(0xF3);
     Delay_ms(2); // 延时 2ms
     Two_Wire_Send_Byte(55);
     Delay_ms(5); // 延时 5ms
+
+    if (humi >= 10 && humi < 100) //
+    {
+        // 十位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(humi / 10);
+        Delay_ms(5); // 延时 5ms
+
+        // 十
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(10);
+        Delay_ms(5); // 延时 5ms
+    }
+    if ((humi % 10) != 0)
+    {
+        // 个位
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(humi % 10);
+        Delay_ms(5); // 延时 5ms
+    }
+    if (humi == 0)
+    {
+        // 零
+        Two_Wire_Send_Byte(0xF3);
+        Delay_ms(2); // 延时 2ms
+        Two_Wire_Send_Byte(0);
+        Delay_ms(5); // 延时 5ms
+    }
 }
 
 // WT588初始化
