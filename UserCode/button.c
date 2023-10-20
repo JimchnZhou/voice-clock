@@ -15,10 +15,12 @@ sbit Button_IO_2 = P3 ^ 4; // 按键3接P3.4口
 #define Button_Long_Press_Time 35 // 长按时间35*20ms=700ms
 #define Button_Timeout_Time 250    // 超时时间
 
-static unsigned int Button_Hold_Timer[BUTTON_COUNT];    // 按键按下的时长
-static void (*Click_Fun_List[BUTTON_COUNT])(void);      // 单击函数列表
-static void (*Long_Press_Fun_List[BUTTON_COUNT])(void); // 长按函数列表
-static void (*Timeout_Fun_List[BUTTON_COUNT])(void);    // 超时函数列表
+static unsigned int buttonHoldTimer[BUTTON_COUNT];    // 按键按下的时长
+static void (*onClickFunList[BUTTON_COUNT])(void);      // 单击函数列表
+static void (*longPressFunList[BUTTON_COUNT])(void); // 长按函数列表
+static void (*timeoutFunList[BUTTON_COUNT])(void);    // 超时函数列表
+
+
 
 // 初始化相关的变量
 void buttonInit(void)
@@ -26,62 +28,69 @@ void buttonInit(void)
     unsigned char i = 0;
     for (i = 0; i < BUTTON_COUNT; i++)
     {
-        Button_Hold_Timer[i] = 0;
-        Click_Fun_List[i] = 0;
-        Long_Press_Fun_List[i] = 0;
-        Timeout_Fun_List[i] = 0;
+        buttonHoldTimer[i] = 0;
+        onClickFunList[i] = 0;
+        longPressFunList[i] = 0;
+        timeoutFunList[i] = 0;
     }
 }
 
-// 给按钮添加处理函数，“C”为单击，“L”为长按、“O”为超时
-void addEventToButton(unsigned char CH, unsigned char Type, void (*Fun)(void))
+/**
+ * 函数：给按钮添加处理函数
+ *
+ * 参数：
+ * CH：为哪个按钮添加函数
+ * Type：“C”为单击，“L”为长按、“O”为超时
+ * Fun：要绑定添加的函数名
+ */
+void addEventToButton(unsigned char ch, unsigned char type, void (*fun)(void))
 {
-    if (Type == 'C')
+    if (type == 'C')
     {
-        Click_Fun_List[CH] = Fun;
+        onClickFunList[ch] = fun;
     }
-    if (Type == 'L')
+    if (type == 'L')
     {
-        Long_Press_Fun_List[CH] = Fun;
+        longPressFunList[ch] = fun;
     }
-    if (Type == 'O')
+    if (type == 'O')
     {
-        Timeout_Fun_List[CH] = Fun;
+        timeoutFunList[ch] = fun;
     }
 }
 
 // 获取按键状态，读取按键电平
-static unsigned char getButtonStatus(unsigned char CH)
+static unsigned char getButtonStatus(unsigned char ch)
 {
-    if (CH == 0)
+    if (ch == 0)
         return Button_IO_0;
-    if (CH == 1)
+    if (ch == 1)
         return Button_IO_1;
-    if (CH == 2)
+    if (ch == 2)
         return Button_IO_2;
     return 0;
 }
 
 // 根据检测到的点动或者长按关联函数，“C”为单击，“L”为长按、“O”为超时
-static void Button_RunFun(unsigned char CH, unsigned char Type)
+static void Button_RunFun(unsigned char ch, unsigned char type)
 {
-    if (Type == 'C')
+    if (type == 'C')
     {
-        if (Click_Fun_List[CH] == 0)
+        if (onClickFunList[ch] == 0)
             return;
-        Click_Fun_List[CH]();
+        onClickFunList[ch]();
     }
-    if (Type == 'L')
+    if (type == 'L')
     {
-        if (Long_Press_Fun_List[CH] == 0)
+        if (longPressFunList[ch] == 0)
             return;
-        Long_Press_Fun_List[CH]();
+        longPressFunList[ch]();
     }
-    if (Type == 'O')
+    if (type == 'O')
     {
-        if (Timeout_Fun_List[CH] == 0)
+        if (timeoutFunList[ch] == 0)
             return;
-        Timeout_Fun_List[CH]();
+        timeoutFunList[ch]();
     }
 }
 
@@ -94,34 +103,34 @@ void Button_Loop(void)
     {
         if (getButtonStatus(i) == 0) // 如果按键被按下
         {
-            Button_Hold_Timer[i]++; // 按键按下的时长++
+            buttonHoldTimer[i]++; // 按键按下的时长++
         }
         else // 如果按键没有被按下 or 按键被按下后放开
         {
-            if (Button_Hold_Timer[i] != 0) // 如果按下时长不为零，说明按键曾经被按下过
+            if (buttonHoldTimer[i] != 0) // 如果按下时长不为零，说明按键曾经被按下过
             {
-                if (Button_Hold_Timer[i] < Button_Click_Time || Button_Hold_Timer[i] > Button_Timeout_Time)
+                if (buttonHoldTimer[i] < Button_Click_Time || buttonHoldTimer[i] > Button_Timeout_Time)
                 // 小于单击时间为抖动，大于超时时间为超时
                 {
-                    Button_Hold_Timer[i] = 0; // 按下的时间作废，清零
+                    buttonHoldTimer[i] = 0; // 按下的时间作废，清零
                     continue;
                 }
-                if (Button_Hold_Timer[i] >= Button_Click_Time && Button_Hold_Timer[i] < Button_Long_Press_Time)
+                if (buttonHoldTimer[i] >= Button_Click_Time && buttonHoldTimer[i] < Button_Long_Press_Time)
                 // 单击时间与长按时间之间为单击
                 {
-                    Button_Hold_Timer[i] = 0;
+                    buttonHoldTimer[i] = 0;
                     Button_RunFun(i, 'C');
                     continue;
                 }
-                if (Button_Hold_Timer[i] >= Button_Long_Press_Time && Button_Hold_Timer[i] < Button_Timeout_Time)
+                if (buttonHoldTimer[i] >= Button_Long_Press_Time && buttonHoldTimer[i] < Button_Timeout_Time)
                 // 长按时间与超时时间之间为长按
                 {
-                    Button_Hold_Timer[i] = 0;
+                    buttonHoldTimer[i] = 0;
                     Button_RunFun(i, 'L');
                     continue;
                 }
             }
-            Button_Hold_Timer[i] = 0;
+            buttonHoldTimer[i] = 0;
         }
     }
 }

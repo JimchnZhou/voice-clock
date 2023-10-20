@@ -24,15 +24,15 @@ void main()
     wt588fInit();    // WT588初始化
 
     // LED与蜂鸣器测试
-    LED1_ON();
-    Beep_Once(100);
-    LED1_OFF();
+    led1On();
+    beepOnce(100);
+    led1Off();
 
     delayMs(200);
 
-    LED2_ON();
-    Beep_Once(100);
-    LED2_OFF();
+    led2On();
+    beepOnce(100);
+    led2Off();
 
     // LCD1602测试
 
@@ -46,10 +46,10 @@ void main()
     addEventToButton(1, 'L', button1LongPressEvent); // 按键1添加长按函数
     addEventToButton(2, 'L', button2LongPressEvent); // 按键2添加长按函数
 
-    SYS_New_LoopFun(33, readTimeFromDs1302); // 添加读取时间到系统调度，每33*10ms读取一次时间
-		SYS_New_LoopFun(50, readDataFromDht11); // 添加读取时间到系统调度，每50*10ms读取一次时间
-    SYS_New_LoopFun(25, lcd1602Display);     // 添加显示到系统调度，每25*10ms刷新一次显示
-    SYS_New_LoopFun(2, Button_Loop);         // 添加按键到系统调度，每2*10ms检测一次按键
+    addEventToLoop(33, readTimeFromDs1302); // 添加读取时间到系统调度，每33*10ms读取一次时间
+		addEventToLoop(50, readDataFromDht11); // 添加读取时间到系统调度，每50*10ms读取一次时间
+    addEventToLoop(25, lcd1602Display);     // 添加显示到系统调度，每25*10ms刷新一次显示
+    addEventToLoop(2, Button_Loop);         // 添加按键到系统调度，每2*10ms检测一次按键
 
     // List_2A_Play_WT588F();
     // Two_Wire_Send_Byte(0x01);
