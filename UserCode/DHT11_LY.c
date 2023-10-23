@@ -1,5 +1,5 @@
 #include "stc89.h"
-#include "dht11.h"
+#include "DHT11_LY.h"
 #include "delay.h"
 #include <intrins.h>
 
@@ -101,7 +101,7 @@ void Read_DHT11_Str(unsigned char *Temp, unsigned char *Humi)
 	// 湿度两位数，比如 95   温度一位小数，比如  +32.6  ，-04.7 等
 	Read_DHT11(); // 读取DHT11数据到全局变量
 
-	Humi[0] = Humi_H / 10 + 0x30;//0011 0000
+	Humi[0] = Humi_H / 10 + 0x30;
 	Humi[1] = Humi_H % 10 + 0x30;
 	Humi[2] = 0;
 

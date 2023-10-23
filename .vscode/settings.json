@@ -2,7 +2,6 @@
     "files.associations": {
         "ds1302.h": "c",
         "button.h": "c",
-        "gpio.h": "c",
-        "delay.h": "c"
+        "gpio.h": "c"
     }
 }
