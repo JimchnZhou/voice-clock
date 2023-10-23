@@ -1,4 +1,4 @@
-#include "task.h"
+#include "sysloop.h"
 
 #define	SYS_LoopFun_ListCount	5				// 定时程序调度器深度，决定同时运行几个子程序
 #define	SYS_DelayFun_ListCount	1			// 延时程序调度器深度，决定同时运行几个子程序

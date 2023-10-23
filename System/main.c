@@ -11,7 +11,7 @@
 
 #include "timer.h"
 #include "mode.h"
-#include "task.h"
+#include "sysloop.h"
 
 void main()
 {
@@ -28,7 +28,7 @@ void main()
     Beep_Once(100);
     LED1_OFF();
 
-    delayMs(200);
+    Delay_ms(200);
 
     LED2_ON();
     Beep_Once(100);
@@ -47,7 +47,6 @@ void main()
     addEventToButton(2, 'L', button2LongPressEvent); // 按键2添加长按函数
 
     SYS_New_LoopFun(33, readTimeFromDs1302); // 添加读取时间到系统调度，每33*10ms读取一次时间
-		SYS_New_LoopFun(50, readDataFromDht11); // 添加读取时间到系统调度，每50*10ms读取一次时间
     SYS_New_LoopFun(25, lcd1602Display);     // 添加显示到系统调度，每25*10ms刷新一次显示
     SYS_New_LoopFun(2, Button_Loop);         // 添加按键到系统调度，每2*10ms检测一次按键
 

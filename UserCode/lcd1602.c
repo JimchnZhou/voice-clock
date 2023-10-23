@@ -31,7 +31,7 @@ bit LCD1602_Check_Busy(void)
     RS_CLR;
     RW_SET;
     EN_CLR;
-    delayUs(1);
+    Delay_us(1);
     EN_SET;
     return (bit)(DATAPORT & 0x80);
 }
@@ -40,12 +40,12 @@ bit LCD1602_Check_Busy(void)
 void LCD1602_Write_Com(unsigned char com)
 {
     // while(LCD_Check_Busy());
-    delayMs(5);
+    Delay_ms(5);
     RS_CLR;
     RW_CLR;
     EN_SET;
     DATAPORT = com;
-    delayUs(1);
+    Delay_us(1);
     EN_CLR;
 }
 
@@ -53,12 +53,12 @@ void LCD1602_Write_Com(unsigned char com)
 void LCD1602_Write_Data(unsigned char Data)
 {
     // while(LCD_Check_Busy());
-    delayMs(5);
+    Delay_ms(5);
     RS_SET;
     RW_CLR;
     EN_SET;
     DATAPORT = Data;
-    delayUs(1);
+    Delay_us(1);
     EN_CLR;
 }
 
@@ -66,7 +66,7 @@ void LCD1602_Write_Data(unsigned char Data)
 void LCD1602_Clear(void)
 {
     LCD1602_Write_Com(0x01);
-    delayMs(5);
+    Delay_ms(5);
 }
 
 // 向LCD写入字符串函数
@@ -105,16 +105,16 @@ void LCD1602_Write_String(unsigned char x, unsigned char y, unsigned char *s)
 void lcd1602Init(void)
 {
     LCD1602_Write_Com(0x38);
-    delayMs(5);
+    Delay_ms(5);
     LCD1602_Write_Com(0x38);
-    delayMs(5);
+    Delay_ms(5);
     LCD1602_Write_Com(0x38);
-    delayMs(5);
+    Delay_ms(5);
     LCD1602_Write_Com(0x38);
     LCD1602_Write_Com(0x08);
     LCD1602_Write_Com(0x01);
     LCD1602_Write_Com(0x06);
-    delayMs(5);
+    Delay_ms(5);
     LCD1602_Write_Com(0x0C);
 }
 
@@ -126,7 +126,7 @@ void lcd1602Display(void)
     case 0:                                                                                                                  // 正常显示                                                                                   // 显示第一行
         sprintf(temp, "%02d:%02d:%02d", (int)getCurrentTimeData(3), (int)getCurrentTimeData(4), (int)getCurrentTimeData(5)); // 时分秒
         LCD1602_Write_String(0, 0, temp);
-        sprintf(temp, "TE：%f RH：%d", (int)getTempData(), (int)getHumiData()); // 时分秒
+        sprintf(temp, "TE：%02f RH：%02d", (int)getTempData(), (int)getHumiData()); // 时分秒
         LCD1602_Write_String(0, 1, temp);                                           // 显示第二行
         break;
     case 1:                                            // 调小时
