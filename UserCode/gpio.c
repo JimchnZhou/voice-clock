@@ -2,58 +2,58 @@
 #include "gpio.h"
 #include "delay.h"
 
-sbit Led1 = P3 ^ 0;
-sbit Led2 = P3 ^ 1;
+sbit LED1 = P3 ^ 0;
+sbit LED2 = P3 ^ 1;
 sbit Beep = P1 ^ 0;
 
 //点亮LED1
-void led1On(void)
+void LED1_ON(void)
 {
-    Led1 = 0;
+    LED1 = 0;
 }
 
 //熄灭LED1
-void led1Off(void)
+void LED1_OFF(void)
 {
-    Led1 = 1;
+    LED1 = 1;
 }
 
 //点亮LED2
-void led2On(void)
+void LED2_ON(void)
 {
-    Led2 = 0;
+    LED2 = 0;
 }
 
 //熄灭LED2
-void led2Off(void)
+void LED2_OFF(void)
 {
-    Led2 = 1;
+    LED2 = 1;
 }
 
 //打开蜂鸣器，响
-void beepOn(void)
+void Beep_ON(void)
 {
     Beep = 0;
 }
 
 //关闭蜂鸣器，不响
-void beepOff(void)
+void Beep_OFF(void)
 {
     Beep = 1;
 }
 
 //蜂鸣器响ms
-void beepOnce(unsigned int ms)
+void Beep_Once(unsigned int ms)
 {
-    beepOn();
+    Beep_ON();
     delayMs(ms);
-    beepOff();
+    Beep_OFF();
 }
 
 //蜂鸣器响ms
-void beep300ms(void)
+void Beep_300ms(void)
 {
-    beepOn();
+    Beep_ON();
     delayMs(300);
-    beepOff();
+    Beep_OFF();
 }

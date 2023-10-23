@@ -2,27 +2,27 @@
 #define __GPIO_H__
 
 //点亮LED1
-void led1On(void);
+void LED1_ON(void);
 
 //熄灭LED1
-void led1Off(void);
+void LED1_OFF(void);
 
 //点亮LED2
-void led2On(void);
+void LED2_ON(void);
 
 //熄灭LED2
-void led2Off(void);
+void LED2_OFF(void);
 
 //打开蜂鸣器，响
-void beepOn(void);
+void Beep_ON(void);
 
 //关闭蜂鸣器，不响
-void beepOff(void);
+void Beep_OFF(void);
 
 //蜂鸣器响 ms
-void beepOnce(unsigned int ms);
+void Beep_Once(unsigned int ms);
 
 //蜂鸣器响 300ms
-void beep300ms(void);
+void Beep_300ms(void);
 
 #endif
