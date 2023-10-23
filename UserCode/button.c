@@ -11,9 +11,9 @@ sbit Button_IO_2 = P3 ^ 4; // 按键3接P3.4口
 
 #define BUTTON_COUNT 3 // 按键的数量
 
-#define Button_Click_Time 1       // 单击时间
-#define Button_Long_Press_Time 35 // 长按时间35*20ms=700ms
-#define Button_Timeout_Time 250    // 超时时间
+#define Button_Click_Time 5       // 单击时间
+#define Button_Long_Press_Time 20 // 长按时间
+#define Button_Timeout_Time 50    // 超时时间
 
 static unsigned int buttonHoldTimer[BUTTON_COUNT];    // 按键按下的时长
 static void (*onClickFunList[BUTTON_COUNT])(void);      // 单击函数列表

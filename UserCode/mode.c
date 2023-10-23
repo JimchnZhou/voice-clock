@@ -39,12 +39,9 @@ void changeRunningMode(void)
 unsigned char setRunningMode(unsigned char modeValue)
 {
     unsigned char i;
-    if (modeValue != 0)
+    for (i = 0; i < 7; i++)
     {
-        for (i = 0; i < 7; i++)
-        {
-            setNewTimeData(i, getCurrentTimeData(i));
-        }
+        setNewTimeData(i,getCurrentTimeData());
     }
     LCD1602_Clear();
     mode = modeValue;
