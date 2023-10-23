@@ -437,6 +437,12 @@ void speakHumidity()
         delayMs(5); // 延时 5ms
     }
 }
+
+// WT588初始化
+void wt588fInit()
+{
+    Two_Wire_Send_Byte(0xEF); // WT588声音最大
+}
 /*
 //欢迎使用智能语音电子时钟
     Two_Wire_Send_Byte(0xF3);

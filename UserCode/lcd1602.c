@@ -118,38 +118,31 @@ void lcd1602Init(void)
     LCD1602_Write_Com(0x0C);
 }
 
+// LCD1602显示内容
 void lcd1602Display(void)
 {
     switch (getRunningMode())
     {
-    case 0:                                                                                                                  // 正常显示
-        sprintf(temp, "%04d-%02d-%02d", (int)time_buf1[1], (int)time_buf1[2], (int)time_buf1[3], (int)time_buf1[7]);         // 年月日周
-        LCD1602_Write_String(0, 0, temp);                                                                                    // 显示第一行
+    case 0:                                                                                                                  // 正常显示                                                                                   // 显示第一行
         sprintf(temp, "%02d:%02d:%02d", (int)getCurrentTimeData(3), (int)getCurrentTimeData(4), (int)getCurrentTimeData(5)); // 时分秒
-<<<<<<< HEAD
         LCD1602_Write_String(0, 0, temp);
         sprintf(temp, "TE：%f RH：%d", (int)getTempData(), (int)getHumiData()); // 时分秒
         LCD1602_Write_String(0, 1, temp);                                           // 显示第二行
-=======
-        LCD1602_Write_String(0, 1, temp);                                                                                    // 显示第二行
->>>>>>> parent of b894a57 (基本完成时间显示与调节)
         break;
-    case 1: // 正常显示
-
-        LCD1602_Write_String(0, 0, "SET Hour");            // 显示第一行
-        sprintf(temp, "%02d", (int)getNewTimeData(3)); // 时分秒
-        LCD1602_Write_String(0, 1, temp);                  // 显示第二行
+    case 1:                                            // 调小时
+        LCD1602_Write_String(0, 0, "SET Hour");        // 第一行
+        sprintf(temp, "%02d", (int)getNewTimeData(3)); // 获取时间
+        LCD1602_Write_String(0, 1, temp);              // 显示第二行
         break;
-    case 2:                                                // 正常显示
-        LCD1602_Write_String(0, 0, "SET Minute");          // 显示第一行
-        sprintf(temp, "%02d", (int)getNewTimeData(4)); // 时分秒
-        LCD1602_Write_String(0, 1, temp);                  // 显示第二行
+    case 2:                                            // 调分钟
+        LCD1602_Write_String(0, 0, "SET Minute");      // 显示第一行
+        sprintf(temp, "%02d", (int)getNewTimeData(4)); // 获取时间
+        LCD1602_Write_String(0, 1, temp);              // 显示第二行
         break;
-    case 3: // 正常显示
-        // LCD1602_Clear();
-        LCD1602_Write_String(0, 0, "SET Second");          // 显示第一行
-        sprintf(temp, "%02d", (int)getNewTimeData(5)); // 时分秒
-        LCD1602_Write_String(0, 1, temp);                  // 显示第二行
+    case 3:                                            // 调秒钟
+        LCD1602_Write_String(0, 0, "SET Second");      // 第一行
+        sprintf(temp, "%02d", (int)getNewTimeData(5)); // 获取时间
+        LCD1602_Write_String(0, 1, temp);              // 显示第二行
         break;
     default:
         break;
