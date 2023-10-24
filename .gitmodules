@@ -1,0 +1,3 @@
+[submodule "voice-clock.wiki"]
+	path = voice-clock.wiki
+	url = ../voice-clock.wiki
