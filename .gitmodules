@@ -1,3 +1,6 @@
 [submodule "voice-clock.wiki"]
 	path = voice-clock.wiki
-	url = ../voice-clock.wiki
+	url = ./voice-clock.wiki
+[submodule "UserCode"]
+	path = UserCode
+	url = ./UserCode
