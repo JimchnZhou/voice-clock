@@ -51,7 +51,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>0</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
           <HexFormatSelection>0</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -432,9 +432,9 @@
               <FilePath>..\System\main.c</FilePath>
             </File>
             <File>
-              <FileName>sysloop.c</FileName>
+              <FileName>task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\System\sysloop.c</FilePath>
+              <FilePath>..\System\task.c</FilePath>
             </File>
           </Files>
         </Group>
