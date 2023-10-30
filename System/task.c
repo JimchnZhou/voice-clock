@@ -4,6 +4,7 @@
 // #define SYS_DelayFun_ListCount 1   // 延时函数列表行数，决定同时运行几个延时函数
 // #define SYS_MessageFun_ListCount 1 // 消息函数列表行数，决定同时运行几个消息函数
 
+
 struct
 {
     unsigned char Flag[SYS_LoopFun_ListCount];
