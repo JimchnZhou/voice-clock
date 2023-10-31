@@ -47,10 +47,11 @@ void main()
   addEventToButton(2, 'L', button2LongPressEvent); // 按键2添加长按函数
 
   addEventToLoopList(33, readTimeFromDs1302); // 添加读取时间到系统调度，每33*10ms读取一次时间
+  addEventToLoopList(33, lcd1602Display);     // 添加显示到系统调度，每25*10ms刷新一次显示
   // addEventToLoopList(100, RH);                // 添加读取时间到系统调度，每100*10ms读取一次温度
-  addEventToLoopList(100, readDataFromDht11); // 添加读取时间到系统调度，每100*10ms读取一次温度
-  addEventToLoopList(25, lcd1602Display);     // 添加显示到系统调度，每25*10ms刷新一次显示
-  addEventToLoopList(2, Button_Loop);         // 添加按键到系统调度，每2*10ms检测一次按键
+  addEventToLoopList(300, readDataFromDht11); // 添加读取时间到系统调度，每100*10ms读取一次温度
+
+  addEventToLoopList(2, Button_Loop); // 添加按键到系统调度，每2*10ms检测一次按键
 
   // List_2A_Play_WT588F();
   // Two_Wire_Send_Byte(0x01);
