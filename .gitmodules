@@ -1,6 +1,6 @@
 [submodule "voice-clock.wiki"]
 	path = voice-clock.wiki
-	url = ./voice-clock.wiki
+	url = https://gitlab.soraharu.com/jimchn/voice-clock.wiki.git
 [submodule "UserCode"]
 	path = UserCode
-	url = ./UserCode
+	url = https://gitlab.soraharu.com/jimchn/UserCode.git
